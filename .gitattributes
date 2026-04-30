@@ -1,0 +1,17 @@
+# Ensure consistent line endings across platforms. The audit log NDJSON files
+# the project generates are LF-only by intent; enforcing it on source as well
+# avoids diff churn between Windows contributors and the CI runner.
+* text=auto eol=lf
+
+# Java source and pom files: LF.
+*.java text eol=lf
+*.xml  text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+
+# Binary artifacts that Git should not try to diff or normalize.
+*.jar    binary
+*.pdf    binary
+*.ndjson binary
