@@ -16,6 +16,11 @@ ships Maven 3.0.5 by default, which is incompatible with `maven-compiler-plugin`
 uses it, so the build is reproducible on JitPack, in CI, and on a contributor's
 laptop without a system Maven install. v0.1.0 is deprecated; use 0.1.1 or later.
 
+JitPack coordinates carry the `v` prefix because JitPack uses the git tag
+verbatim as the Maven version: `com.github.iambilotta.spring-aiact:spring-aiact-
+spring-boot-starter:v0.1.1`. The Maven Central future coordinates will drop the
+`v` (`com.iambilotta.spring:spring-aiact-spring-boot-starter:0.1.1`).
+
 ### Added
 - Maven Wrapper (`mvnw`, `mvnw.cmd`, `.mvn/wrapper/`).
 - `jitpack.yml` that pins JDK 21 and invokes `./mvnw install` with the sample

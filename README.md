@@ -147,7 +147,7 @@ Add the JitPack repository, then the starter dependency:
 <dependency>
     <groupId>com.github.iambilotta.spring-aiact</groupId>
     <artifactId>spring-aiact-spring-boot-starter</artifactId>
-    <version>0.1.1</version>
+    <version>v0.1.1</version>
 </dependency>
 ```
 
@@ -158,13 +158,15 @@ repositories {
     maven { url = uri("https://jitpack.io") }
 }
 dependencies {
-    implementation("com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:0.1.1")
+    implementation("com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:v0.1.1")
 }
 ```
 
 > **Build from source.** If your environment cannot reach JitPack (corporate proxy, air-gapped
-> network) clone the repo and run `mvn install` to publish to your local Maven repository, then
-> depend on `com.iambilotta.spring:spring-aiact-spring-boot-starter:0.1.1` directly.
+> network) clone the repo and run `./mvnw install` to publish to your local Maven repository,
+> then depend on `com.iambilotta.spring:spring-aiact-spring-boot-starter:0.1.1` directly. The
+> coordinate uses `0.1.1` (no `v` prefix) when built from the pom; JitPack uses the git tag
+> verbatim, hence `v0.1.1`.
 
 ### 2. Annotate your high-risk class (5 minutes)
 
@@ -244,7 +246,7 @@ The plugin needs the JitPack plugin repository declared in your `pom.xml`:
         <plugin>
             <groupId>com.github.iambilotta.spring-aiact</groupId>
             <artifactId>spring-aiact-maven-plugin</artifactId>
-            <version>0.1.1</version>
+            <version>v0.1.1</version>
             <executions>
                 <execution>
                     <goals>
