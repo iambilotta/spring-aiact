@@ -1,11 +1,14 @@
-# JitPack build configuration. JitPack runs `mvn install` on the tag; we override
-# the install command to skip the sample module (it is a runnable demo, not a
-# library) and skip tests (CI already enforces them on the matching commit).
+# JitPack build configuration. JitPack runs the install command on the tag; we
+# override it to use the Maven Wrapper so we get a modern Maven (3.9.15) instead
+# of JitPack's built-in 3.0.5. The wrapper auto-downloads on first use.
 #
 # JDK 21 LTS is the minimum baseline declared in the parent pom.
 
 jdk:
   - openjdk21
 
+before_install:
+  - chmod +x ./mvnw
+
 install:
-  - mvn -B -ntp install -pl '!spring-aiact-sample' -am -DskipTests
+  - ./mvnw -B -ntp install -pl '!spring-aiact-sample' -am -DskipTests
