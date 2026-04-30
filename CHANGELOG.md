@@ -6,6 +6,14 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+_No changes yet._
+
+## [0.1.0] - 2026-05-01
+
+First publishable cut. Distributed via JitPack as
+`com.github.iambilotta:spring-aiact-spring-boot-starter:0.1.0` until Maven Central
+publication lands.
+
 ### Added
 - `AiActEndpointGuard` SPI with `DenyAllAiActEndpointGuard` (default) and
   `AllowAllAiActEndpointGuard` (opt-in via `aiact.endpoints.allow-without-guard=true`). Every
@@ -83,7 +91,4 @@ All notable changes to this project are documented here. Format follows
   `examples/docker-compose/`. Each link is referenced from the section that needs it, not
   collected at the bottom.
 
-## [0.1.0] - unreleased
-
-Initial scaffolding. See git log between the `chore: bootstrap multi-module Maven build`
-commit and the first release tag.
+_See git log between `dbd0ea0` (initial scaffolding) and the `v0.1.0` tag for the full delta._

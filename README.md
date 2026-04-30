@@ -8,7 +8,7 @@
 [![Java](https://img.shields.io/badge/java-21%2B-orange.svg)](https://openjdk.org/projects/jdk/21/)
 [![Spring Boot](https://img.shields.io/badge/spring--boot-3.5%2B-green.svg)](https://spring.io/projects/spring-boot)
 [![CI](https://github.com/iambilotta/spring-aiact/actions/workflows/ci.yml/badge.svg)](https://github.com/iambilotta/spring-aiact/actions/workflows/ci.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/com.iambilotta.spring/spring-aiact-spring-boot-starter.svg?label=maven%20central)](https://central.sonatype.com/artifact/com.iambilotta.spring/spring-aiact-spring-boot-starter)
+[![JitPack](https://jitpack.io/v/iambilotta/spring-aiact.svg)](https://jitpack.io/#iambilotta/spring-aiact)
 [![Status](https://img.shields.io/badge/status-alpha%20(v0.1)-yellow.svg)](#project-status)
 
 [**Quick start**](#quick-start-first-run-in-15-minutes) ·
@@ -130,13 +130,41 @@ walk-through of the tamper test.
 
 ### 1. Add the starter (1 minute)
 
+`spring-aiact` is distributed via [JitPack](https://jitpack.io) during the alpha phase. Maven
+Central publication is in flight; once available, the coordinates switch to
+`com.iambilotta.spring:spring-aiact-spring-boot-starter`.
+
+Add the JitPack repository, then the starter dependency:
+
 ```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+
 <dependency>
-    <groupId>com.iambilotta.spring</groupId>
+    <groupId>com.github.iambilotta.spring-aiact</groupId>
     <artifactId>spring-aiact-spring-boot-starter</artifactId>
     <version>0.1.0</version>
 </dependency>
 ```
+
+Gradle:
+
+```kotlin
+repositories {
+    maven { url = uri("https://jitpack.io") }
+}
+dependencies {
+    implementation("com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:0.1.0")
+}
+```
+
+> **Build from source.** If your environment cannot reach JitPack (corporate proxy, air-gapped
+> network) clone the repo and run `mvn install` to publish to your local Maven repository, then
+> depend on `com.iambilotta.spring:spring-aiact-spring-boot-starter:0.1.0` directly.
 
 ### 2. Annotate your high-risk class (5 minutes)
 
@@ -201,20 +229,33 @@ aiact:
 
 ### 4. Wire the Maven plugin (1 minute)
 
+The plugin needs the JitPack plugin repository declared in your `pom.xml`:
+
 ```xml
-<plugin>
-    <groupId>com.iambilotta.spring</groupId>
-    <artifactId>spring-aiact-maven-plugin</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>verify</goal>     <!-- fails build on missing annotation -->
-                <goal>generate</goal>   <!-- emits target/generated-docs/* -->
-            </goals>
-        </execution>
-    </executions>
-</plugin>
+<pluginRepositories>
+    <pluginRepository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </pluginRepository>
+</pluginRepositories>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>com.github.iambilotta.spring-aiact</groupId>
+            <artifactId>spring-aiact-maven-plugin</artifactId>
+            <version>0.1.0</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>verify</goal>     <!-- fails build on missing annotation -->
+                        <goal>generate</goal>   <!-- emits target/generated-docs/* -->
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
 ```
 
 ### 5. Run
@@ -417,12 +458,13 @@ without breaking anyone's legal review process.
 
 ## Roadmap
 
-- **v0.1 (June 2026, target):** the surface above. Apache 2.0, Maven Central. Single SPI for
-  auth (`AiActEndpointGuard`), file-locked audit log, deny-by-default endpoints, fail-fast on
-  the default HMAC secret in production, configuration metadata, actuator health indicator.
-- **v0.5 (July 2026):** build-time `verify` integrated with CI templates (GitHub Actions,
-  GitLab, Jenkins). One contribution upstream to Spring AI / `mcp-security`. Production case
-  study from a real adopter.
+- **v0.1 (May 2026, shipped):** the surface above. Apache 2.0, distributed via JitPack.
+  Single SPI for auth (`AiActEndpointGuard`), file-locked audit log, deny-by-default endpoints,
+  fail-fast on the default HMAC secret in production, configuration metadata, actuator health
+  indicator.
+- **v0.5 (July 2026):** Maven Central publication under `com.iambilotta.spring`. Build-time
+  `verify` integrated with CI templates (GitHub Actions, GitLab, Jenkins). One contribution
+  upstream to Spring AI / `mcp-security`. Production case study from a real adopter.
 - **v1.0 (December 2026):** live encryption-at-rest (`AiActProperties.Encryption`), JDBC-backed
   audit sink as a separate optional module, multi-tenant isolation patterns documented, Spring
   Security autoconfiguration adapter as an opt-in extra module.
