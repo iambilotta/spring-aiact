@@ -19,6 +19,7 @@ public class AiActProperties {
     private Endpoints endpoints = new Endpoints();
     private Hmac hmac = new Hmac();
     private Encryption encryption = new Encryption();
+    private Audit audit = new Audit();
 
     public boolean isEnabled() { return enabled; }
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
@@ -37,6 +38,23 @@ public class AiActProperties {
 
     public Encryption getEncryption() { return encryption; }
     public void setEncryption(Encryption encryption) { this.encryption = encryption; }
+
+    public Audit getAudit() { return audit; }
+    public void setAudit(Audit audit) { this.audit = audit; }
+
+    public static class Audit {
+        /**
+         * When {@code true} (default), the file-backed audit log acquires an OS-level
+         * {@link java.nio.channels.FileLock} on every append and tails the file under the lock.
+         * Required when the same NDJSON path is shared across pods, JVMs or hosts (typical in
+         * Kubernetes deployments with a ReadWriteMany volume). Set to {@code false} only for
+         * single-writer deployments where the contention overhead is undesirable.
+         */
+        private boolean singleWriterLock = true;
+
+        public boolean isSingleWriterLock() { return singleWriterLock; }
+        public void setSingleWriterLock(boolean v) { this.singleWriterLock = v; }
+    }
 
     public static class Endpoints {
         private boolean enabled = true;
