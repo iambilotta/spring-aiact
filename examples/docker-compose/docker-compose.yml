@@ -1,0 +1,52 @@
+name: spring-aiact-demo
+
+# Minimal runnable demo of spring-aiact end to end.
+#
+# What this stands up:
+#   - the sample Spring Boot service (built from the project)
+#   - a Caddy reverse proxy in front of it that requires basic auth on /aiact/**
+#     (real production should use a proper auth stack; this is for the demo only)
+#   - a persistent volume for the audit log
+#
+# Run from this directory:
+#   docker compose up --build
+#
+# Then post a candidate to score:
+#   curl -X POST http://localhost:8080/hiring/score \
+#     -H 'Content-Type: application/json' \
+#     -d '{"candidateId":"c-1","cvText":"hello"}'
+#
+# Read the audit log (basic auth audit / audit-pass):
+#   curl -u audit:audit-pass \
+#     'http://localhost:8080/aiact/log/export?system=hiring-screener'
+#
+# Verify the chain:
+#   curl -u audit:audit-pass \
+#     'http://localhost:8080/aiact/log/verify?system=hiring-screener'
+
+services:
+  sample:
+    build:
+      context: ../..
+      dockerfile: examples/docker-compose/Dockerfile
+    environment:
+      AIACT_HMAC_SECRET: demo-secret-replace-in-prod
+      SPRING_PROFILES_ACTIVE: demo
+      AIACT_LOG_DIR: /var/log/aiact
+      AIACT_ENDPOINTS_ALLOW_WITHOUT_GUARD: "true"
+    volumes:
+      - aiact-logs:/var/log/aiact
+    expose:
+      - "8081"
+
+  proxy:
+    image: caddy:2
+    depends_on:
+      - sample
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+
+volumes:
+  aiact-logs:
