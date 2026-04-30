@@ -11,6 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.iambilotta.spring.aiact.audit.AiActLoggingAspect;
 import com.iambilotta.spring.aiact.audit.AuditLogService;
 import com.iambilotta.spring.aiact.audit.HmacChain;
+import com.iambilotta.spring.aiact.audit.MetadataSanitizer;
 import com.iambilotta.spring.aiact.audit.NdjsonAuditLogService;
 import com.iambilotta.spring.aiact.audit.PayloadHasher;
 import com.iambilotta.spring.aiact.audit.UserPseudonymizer;
@@ -104,16 +105,24 @@ public class AiActAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    AiActLoggingAspect aiActLoggingAspect(AuditLogService auditLog,
-                                          PayloadHasher hasher,
-                                          UserPseudonymizer userPseudonymizer) {
-        return new AiActLoggingAspect(auditLog, hasher, userPseudonymizer);
+    MetadataSanitizer aiActMetadataSanitizer() {
+        return new MetadataSanitizer();
     }
 
     @Bean
     @ConditionalOnMissingBean
-    OversightService aiActOversightService(AuditLogService auditLog) {
-        return new OversightService(auditLog);
+    AiActLoggingAspect aiActLoggingAspect(AuditLogService auditLog,
+                                          PayloadHasher hasher,
+                                          UserPseudonymizer userPseudonymizer,
+                                          MetadataSanitizer metadataSanitizer) {
+        return new AiActLoggingAspect(auditLog, hasher, userPseudonymizer, metadataSanitizer);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    OversightService aiActOversightService(AuditLogService auditLog,
+                                           MetadataSanitizer metadataSanitizer) {
+        return new OversightService(auditLog, metadataSanitizer);
     }
 
     @Bean
