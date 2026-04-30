@@ -8,12 +8,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iambilotta.spring.aiact.audit.AuditLogService;
 import com.iambilotta.spring.aiact.audit.HmacChain;
 import com.iambilotta.spring.aiact.model.AuditEvent;
+import com.iambilotta.spring.aiact.security.AiActEndpointGuard;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.IOException;
@@ -41,10 +44,20 @@ public class AiActLogController {
 
     private final AuditLogService auditLog;
     private final ObjectMapper mapper;
+    private final AiActEndpointGuard guard;
 
-    public AiActLogController(AuditLogService auditLog, ObjectMapper mapper) {
+    public AiActLogController(AuditLogService auditLog, ObjectMapper mapper,
+                              AiActEndpointGuard guard) {
         this.auditLog = auditLog;
         this.mapper = mapper;
+        this.guard = guard;
+    }
+
+    private void enforce(String systemId, AiActEndpointGuard.Action action) {
+        AiActEndpointGuard.Decision d = guard.authorize(systemId, action);
+        if (!d.allowed()) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, d.reason());
+        }
     }
 
     @GetMapping(value = "/export", produces = "application/x-ndjson")
@@ -52,6 +65,7 @@ public class AiActLogController {
             @RequestParam("system") String systemId,
             @RequestParam(value = "from", required = false) Instant from,
             @RequestParam(value = "to", required = false) Instant to) {
+        enforce(systemId, AiActEndpointGuard.Action.EXPORT_LOG);
         StreamingResponseBody body = out -> {
             try (Writer w = new OutputStreamWriter(out, StandardCharsets.UTF_8);
                  Stream<AuditEvent> events = auditLog.stream(systemId, from, to)) {
@@ -80,11 +94,13 @@ public class AiActLogController {
             @RequestParam("system") String systemId,
             @RequestParam(value = "from", required = false) Instant from,
             @RequestParam(value = "to", required = false) Instant to) {
+        enforce(systemId, AiActEndpointGuard.Action.VERIFY_LOG);
         return auditLog.verify(systemId, from, to);
     }
 
     @GetMapping(value = "/head", produces = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> head(@RequestParam("system") String systemId) {
+        enforce(systemId, AiActEndpointGuard.Action.READ_HEAD);
         AtomicReference<String> last = new AtomicReference<>(HmacChain.CHAIN_SEED);
         try (Stream<AuditEvent> s = auditLog.stream(systemId, null, null)) {
             s.forEach(e -> {

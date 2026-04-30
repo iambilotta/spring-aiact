@@ -14,6 +14,9 @@ aiact:
   endpoints:
     enabled: true
     base-path: /aiact
+    # The sample is meant to be runnable on a developer laptop, so the unsafe
+    # permit-all guard is on. NEVER copy this line into a production config.
+    allow-without-guard: true
   retention-sweeper:
     enabled: false
 

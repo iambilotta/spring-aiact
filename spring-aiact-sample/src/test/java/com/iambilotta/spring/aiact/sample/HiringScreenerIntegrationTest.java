@@ -29,7 +29,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 @TestPropertySource(properties = {
         "aiact.log-dir=${java.io.tmpdir}/spring-aiact-it",
         "aiact.hmac.secret=integration-test-secret",
-        "aiact.retention-sweeper.enabled=false"
+        "aiact.retention-sweeper.enabled=false",
+        "aiact.endpoints.allow-without-guard=true"
 })
 class HiringScreenerIntegrationTest {
 
