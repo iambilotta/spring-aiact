@@ -8,10 +8,29 @@ All notable changes to this project are documented here. Format follows
 
 _No changes yet._
 
-## [0.1.0] - 2026-05-01
+## [0.1.1] - 2026-05-01
+
+Fix-only re-tag. v0.1.0 was tagged but the JitPack build failed because JitPack
+ships Maven 3.0.5 by default, which is incompatible with `maven-compiler-plugin`
+3.13.0. v0.1.1 adds the Maven Wrapper (`./mvnw` 3.9.15) and a `jitpack.yml` that
+uses it, so the build is reproducible on JitPack, in CI, and on a contributor's
+laptop without a system Maven install. v0.1.0 is deprecated; use 0.1.1 or later.
+
+### Added
+- Maven Wrapper (`mvnw`, `mvnw.cmd`, `.mvn/wrapper/`).
+- `jitpack.yml` that pins JDK 21 and invokes `./mvnw install` with the sample
+  module excluded.
+
+### Fixed
+- JitPack build failure on v0.1.0 caused by the obsolete Maven version on the
+  JitPack worker.
+
+## [0.1.0] - 2026-05-01  (DEPRECATED, do not use)
+
+Tagged but unbuildable on JitPack. Use [0.1.1] or later. Surface unchanged.
 
 First publishable cut. Distributed via JitPack as
-`com.github.iambilotta:spring-aiact-spring-boot-starter:0.1.0` until Maven Central
+`com.github.iambilotta:spring-aiact-spring-boot-starter` until Maven Central
 publication lands.
 
 ### Added
