@@ -1,0 +1,65 @@
+name: Bug report
+description: Something is broken or behaves contrary to the documentation.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report. Before filing, please check that
+        the issue is reproducible against the latest released version.
+        Security issues should be reported privately, see SECURITY.md.
+  - type: input
+    id: version
+    attributes:
+      label: spring-aiact version
+      placeholder: "0.1.0"
+    validations:
+      required: true
+  - type: dropdown
+    id: java-version
+    attributes:
+      label: Java version
+      options:
+        - "21 (LTS)"
+        - "25 (LTS)"
+        - other
+    validations:
+      required: true
+  - type: input
+    id: spring-boot
+    attributes:
+      label: Spring Boot version
+      placeholder: "3.5.0"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Describe the actual behavior, including the full stack trace if any.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
+      description: Describe the documented or intuitive behavior the code did not match.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Smallest possible code path that triggers the issue. A failing test against the spring-aiact-sample module is ideal.
+      render: java
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Relevant configuration
+      description: |
+        The aiact.* properties from your application.yaml that bear on this issue.
+        Strip secrets.
+      render: yaml

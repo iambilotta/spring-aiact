@@ -1,0 +1,43 @@
+name: Feature request
+description: Suggest a new capability that fits the project scope.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing, check the README "Anti-patterns explicitly out of scope" section
+        and the roadmap. Out-of-scope requests get redirected, not silently rejected.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem this solves
+      description: What does an adopter want to accomplish that the current surface does not let them?
+    validations:
+      required: true
+  - type: textarea
+    id: shape
+    attributes:
+      label: Proposed shape
+      description: |
+        One paragraph, code-level. Annotation, SPI, configuration property, or
+        new mojo. The smaller the surface, the easier the merge.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else did you try, and why is the proposed shape better?
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      options:
+        - core (annotation set, audit log, AOP)
+        - codegen (technical file, DoC, datasheet)
+        - starter (auto-config, REST endpoints)
+        - maven-plugin
+        - documentation
+        - other
+    validations:
+      required: true
