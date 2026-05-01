@@ -1,0 +1,22 @@
+server:
+  port: 8081
+
+spring:
+  main:
+    banner-mode: off
+
+aiact:
+  enabled: true
+  log-dir: ${java.io.tmpdir}/spring-aiact-sample
+  retention: P10Y
+  hmac:
+    secret: sample-secret-please-override
+  endpoints:
+    enabled: true
+    base-path: /aiact
+  retention-sweeper:
+    enabled: false
+
+logging:
+  level:
+    com.iambilotta.spring.aiact: INFO
