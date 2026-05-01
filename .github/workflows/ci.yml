@@ -1,0 +1,61 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '21', '25' ]
+    name: build (java ${{ matrix.java }})
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: ${{ matrix.java }}
+          cache: maven
+
+      - name: Verify formatting and compile
+        run: mvn -B -ntp -V validate compile
+
+      - name: Run tests
+        run: mvn -B -ntp -V test
+
+      - name: Run plugin against sample
+        run: mvn -B -ntp -V -DskipTests verify
+
+      - name: Upload generated docs (sample)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-docs-jdk${{ matrix.java }}
+          path: spring-aiact-sample/target/generated-docs/
+          if-no-files-found: ignore
+
+  dependency-check:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+          cache: maven
+      - name: OWASP Dependency-Check
+        run: mvn -B -ntp -V -Pdependency-check verify -DskipTests
+        continue-on-error: true

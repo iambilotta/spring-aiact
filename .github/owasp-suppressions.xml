@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+    <!--
+        Add suppressions here when an OWASP dependency-check finding is a false positive or
+        when the upstream has not yet released a fix. Every entry must include a notes element
+        explaining why the suppression is in place and a target date for re-evaluation.
+    -->
+</suppressions>
