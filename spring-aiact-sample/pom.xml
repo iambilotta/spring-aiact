@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.iambilotta.spring</groupId>
+        <artifactId>spring-aiact-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>spring-aiact-sample</artifactId>
+    <name>spring-aiact (sample app)</name>
+    <description>Demonstration Spring Boot application showing an annotated high-risk AI controller and the resulting Article 12 audit log + Technical File output.</description>
+
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.iambilotta.spring</groupId>
+            <artifactId>spring-aiact-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <mainClass>com.iambilotta.spring.aiact.sample.SampleApplication</mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.iambilotta.spring</groupId>
+                <artifactId>spring-aiact-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <executions>
+                    <execution>
+                        <id>aiact-generate</id>
+                        <goals><goal>generate</goal></goals>
+                    </execution>
+                    <execution>
+                        <id>aiact-verify</id>
+                        <goals><goal>verify</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <architectureDescription>Sample Spring Boot service with one REST endpoint and an annotated screening service. Used end-to-end by the spring-aiact integration test.</architectureDescription>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
