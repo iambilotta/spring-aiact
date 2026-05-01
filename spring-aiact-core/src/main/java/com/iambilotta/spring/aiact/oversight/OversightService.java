@@ -5,9 +5,11 @@
 package com.iambilotta.spring.aiact.oversight;
 
 import com.iambilotta.spring.aiact.audit.AuditLogService;
+import com.iambilotta.spring.aiact.audit.MetadataSanitizer;
 import com.iambilotta.spring.aiact.model.AuditEvent;
 import com.iambilotta.spring.aiact.model.EventKind;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -23,9 +25,16 @@ public class OversightService {
     );
 
     private final AuditLogService auditLog;
+    private final MetadataSanitizer metadataSanitizer;
 
-    public OversightService(AuditLogService auditLog) {
+    public OversightService(AuditLogService auditLog, MetadataSanitizer metadataSanitizer) {
         this.auditLog = auditLog;
+        this.metadataSanitizer = metadataSanitizer;
+    }
+
+    /** Convenience for callers wiring without the starter. */
+    public OversightService(AuditLogService auditLog) {
+        this(auditLog, new MetadataSanitizer());
     }
 
     public AuditEvent recordOverride(OversightOverride override) {
@@ -33,6 +42,9 @@ public class OversightService {
         EventKind kind = "stop".equals(override.decision()) ? EventKind.STOP
                 : "flag-anomaly".equals(override.decision()) ? EventKind.ANOMALY
                 : EventKind.OVERRIDE;
+        Map<String, String> raw = new HashMap<>();
+        raw.put("decision", override.decision());
+        raw.put("reason", override.reason() == null ? "" : override.reason());
         AuditEvent event = AuditEvent.builder()
                 .eventKind(kind)
                 .systemId(override.systemId())
@@ -41,10 +53,7 @@ public class OversightService {
                 .userIdPseudonymized(override.actor())
                 .verifierId(override.actor())
                 .linkedEventId(override.linkedEventId())
-                .metadata(Map.of(
-                        "decision", override.decision(),
-                        "reason", override.reason() == null ? "" : override.reason()
-                ))
+                .metadata(metadataSanitizer.sanitize(raw))
                 .build();
         return auditLog.append(event);
     }

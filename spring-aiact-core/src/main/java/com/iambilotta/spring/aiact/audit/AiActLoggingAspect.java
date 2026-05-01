@@ -32,12 +32,15 @@ public class AiActLoggingAspect {
     private final AuditLogService auditLog;
     private final PayloadHasher hasher;
     private final UserPseudonymizer userPseudonymizer;
+    private final MetadataSanitizer metadataSanitizer;
 
     public AiActLoggingAspect(AuditLogService auditLog, PayloadHasher hasher,
-                              UserPseudonymizer userPseudonymizer) {
+                              UserPseudonymizer userPseudonymizer,
+                              MetadataSanitizer metadataSanitizer) {
         this.auditLog = auditLog;
         this.hasher = hasher;
         this.userPseudonymizer = userPseudonymizer;
+        this.metadataSanitizer = metadataSanitizer;
     }
 
     @Around("@annotation(com.iambilotta.spring.aiact.annotation.AiActLog) "
@@ -80,10 +83,7 @@ public class AiActLoggingAspect {
                     b.outputHash(hasher.hash(result, annotation.hashStrategy()));
                 }
                 if (failure != null) {
-                    b.metadata(java.util.Map.of(
-                            "exception", failure.getClass().getName(),
-                            "message", String.valueOf(failure.getMessage())
-                    ));
+                    b.metadata(metadataSanitizer.describeException(failure));
                 }
                 auditLog.append(b.build());
             } catch (RuntimeException auditError) {
