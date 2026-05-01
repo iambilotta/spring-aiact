@@ -11,6 +11,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -33,16 +36,44 @@ public class NdjsonAuditLogService implements AuditLogService {
 
     private static final Logger log = LoggerFactory.getLogger(NdjsonAuditLogService.class);
 
+    /**
+     * JVM-wide registry of intra-process locks keyed by absolute file path. Multiple
+     * {@link NdjsonAuditLogService} instances pointing at the same file (typical in tests, also
+     * possible in deployers that wire two beans by mistake) share the same lock so they do not
+     * trip over OverlappingFileLockException on the OS-level {@link FileLock}.
+     */
+    private static final Map<String, ReentrantLock> JVM_FILE_LOCKS = new ConcurrentHashMap<>();
+
     private final Path rootDir;
     private final HmacChain hmac;
     private final ObjectMapper mapper;
+    private final boolean multiProcessSafe;
     private final Map<String, ReentrantLock> locks = new ConcurrentHashMap<>();
     private final Map<String, String> chainHeads = new ConcurrentHashMap<>();
 
     public NdjsonAuditLogService(Path rootDir, HmacChain hmac, ObjectMapper mapper) {
+        this(rootDir, hmac, mapper, true);
+    }
+
+    /**
+     * @param multiProcessSafe when {@code true} (recommended default), every append acquires an
+     *                         OS-level exclusive {@link FileLock} on the per-system NDJSON file
+     *                         and tails it under the lock to recompute the chain head from disk.
+     *                         This is the only mode that is correct under multi-pod / multi-JVM
+     *                         deployments writing to the same shared filesystem. The trade-off
+     *                         is one extra fsync-class operation per append (typically 1-3 ms on
+     *                         a modern SSD; slower on networked filesystems).
+     *                         <p>
+     *                         When {@code false}, the service relies only on its in-memory
+     *                         {@link ReentrantLock} per system id. Faster, but only correct for
+     *                         single-writer deployments.
+     */
+    public NdjsonAuditLogService(Path rootDir, HmacChain hmac, ObjectMapper mapper,
+                                 boolean multiProcessSafe) {
         this.rootDir = rootDir;
         this.hmac = hmac;
         this.mapper = mapper;
+        this.multiProcessSafe = multiProcessSafe;
         try {
             Files.createDirectories(rootDir);
         } catch (IOException e) {
@@ -59,31 +90,84 @@ public class NdjsonAuditLogService implements AuditLogService {
         ReentrantLock lock = locks.computeIfAbsent(systemId, k -> new ReentrantLock());
         lock.lock();
         try {
-            Path file = fileFor(systemId);
-            if (!Files.exists(file)) {
-                chainHeads.remove(systemId);
-            }
-            String prev = chainHeads.computeIfAbsent(systemId, k -> tailHmac(file));
-            String payload = serializeWithoutHmac(event.withRecordHmac(null));
-            String mac = hmac.chain(prev, payload);
-            AuditEvent toPersist = new AuditEvent(
-                    event.eventId(), event.eventKind(), event.timestamp(), event.systemId(),
-                    event.systemVersion(), event.operation(), event.userIdPseudonymized(),
-                    event.modelId(), event.inputHash(), event.outputHash(), event.hashAlgorithm(),
-                    event.latencyMs(), event.dbReference(), event.verifierId(),
-                    event.linkedEventId(), event.correlationId(), event.metadata(),
-                    prev, mac
-            );
-            String json = serialize(toPersist);
-            Files.writeString(file, json + System.lineSeparator(), StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-            chainHeads.put(systemId, mac);
-            return toPersist;
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot append audit event for " + systemId, e);
+            return multiProcessSafe ? appendUnderFileLock(event) : appendInProcess(event);
         } finally {
             lock.unlock();
         }
+    }
+
+    private AuditEvent appendInProcess(AuditEvent event) {
+        Path file = fileFor(event.systemId());
+        if (!Files.exists(file)) {
+            chainHeads.remove(event.systemId());
+        }
+        String prev = chainHeads.computeIfAbsent(event.systemId(), k -> tailHmac(file));
+        AuditEvent toPersist = sealWithChain(event, prev);
+        try {
+            Files.writeString(file, serialize(toPersist) + System.lineSeparator(),
+                    StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot append audit event for " + event.systemId(), e);
+        }
+        chainHeads.put(event.systemId(), toPersist.recordHmac());
+        return toPersist;
+    }
+
+    private AuditEvent appendUnderFileLock(AuditEvent event) {
+        Path file = fileFor(event.systemId());
+        ReentrantLock jvmLock = JVM_FILE_LOCKS.computeIfAbsent(
+                file.toAbsolutePath().toString(), k -> new ReentrantLock());
+        jvmLock.lock();
+        try (FileChannel ch = FileChannel.open(file,
+                StandardOpenOption.CREATE, StandardOpenOption.READ, StandardOpenOption.WRITE);
+             FileLock fileLock = ch.lock()) {
+            String prev = tailHmacFromChannel(ch);
+            AuditEvent toPersist = sealWithChain(event, prev);
+            ch.position(ch.size());
+            ByteBuffer buf = ByteBuffer.wrap(
+                    (serialize(toPersist) + System.lineSeparator()).getBytes(StandardCharsets.UTF_8));
+            while (buf.hasRemaining()) ch.write(buf);
+            ch.force(true);
+            chainHeads.put(event.systemId(), toPersist.recordHmac());
+            return toPersist;
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot append audit event for " + event.systemId(), e);
+        } finally {
+            jvmLock.unlock();
+        }
+    }
+
+    private AuditEvent sealWithChain(AuditEvent event, String prev) {
+        String payload = serializeWithoutHmac(event.withRecordHmac(null));
+        String mac = hmac.chain(prev, payload);
+        return new AuditEvent(
+                event.eventId(), event.eventKind(), event.timestamp(), event.systemId(),
+                event.systemVersion(), event.operation(), event.userIdPseudonymized(),
+                event.modelId(), event.inputHash(), event.outputHash(), event.hashAlgorithm(),
+                event.latencyMs(), event.dbReference(), event.verifierId(),
+                event.linkedEventId(), event.correlationId(), event.metadata(),
+                prev, mac
+        );
+    }
+
+    private String tailHmacFromChannel(FileChannel ch) throws IOException {
+        long size = ch.size();
+        if (size == 0) return HmacChain.CHAIN_SEED;
+        long readFrom = Math.max(0, size - 65_536);
+        ByteBuffer buf = ByteBuffer.allocate((int) (size - readFrom));
+        ch.read(buf, readFrom);
+        String tail = new String(buf.array(), 0, buf.position(), StandardCharsets.UTF_8);
+        int lastNewline = tail.lastIndexOf('\n');
+        if (lastNewline >= 0 && lastNewline == tail.length() - 1) {
+            int prevNewline = tail.lastIndexOf('\n', lastNewline - 1);
+            tail = prevNewline >= 0 ? tail.substring(prevNewline + 1, lastNewline)
+                                    : tail.substring(0, lastNewline);
+        } else if (lastNewline >= 0) {
+            tail = tail.substring(lastNewline + 1);
+        }
+        if (tail.isBlank()) return HmacChain.CHAIN_SEED;
+        AuditEvent ev = parseLine(tail);
+        return ev == null || ev.recordHmac() == null ? HmacChain.CHAIN_SEED : ev.recordHmac();
     }
 
     @Override

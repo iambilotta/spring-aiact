@@ -100,7 +100,8 @@ public class AiActAutoConfiguration {
     AuditLogService aiActAuditLogService(AiActConfigProperties props,
                                           HmacChain hmac,
                                           ObjectMapper mapper) {
-        return new NdjsonAuditLogService(props.getLogDir(), hmac, mapper);
+        return new NdjsonAuditLogService(
+                props.getLogDir(), hmac, mapper, props.getAudit().isSingleWriterLock());
     }
 
     @Bean
