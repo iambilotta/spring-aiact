@@ -41,11 +41,20 @@ public class AiActProperties {
     public static class Endpoints {
         private boolean enabled = true;
         private String basePath = "/aiact";
+        /**
+         * When {@code true}, allow the unsafe {@code AllowAllAiActEndpointGuard} as the default
+         * guard. Intended for local development only. The starter registers
+         * {@code DenyAllAiActEndpointGuard} when this flag is {@code false}, so production
+         * deployments that forget to wire a real guard will return 403, not leak the audit log.
+         */
+        private boolean allowWithoutGuard = false;
 
         public boolean isEnabled() { return enabled; }
         public void setEnabled(boolean enabled) { this.enabled = enabled; }
         public String getBasePath() { return basePath; }
         public void setBasePath(String basePath) { this.basePath = basePath; }
+        public boolean isAllowWithoutGuard() { return allowWithoutGuard; }
+        public void setAllowWithoutGuard(boolean v) { this.allowWithoutGuard = v; }
     }
 
     public static class Hmac {
