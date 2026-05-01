@@ -1,0 +1,37 @@
+name: AI Act compliance misalignment
+description: A generated artifact disagrees with the AI Act text or with EU AI Office guidance.
+labels: ["compliance-misalignment", "high-priority"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Compliance misalignments take priority over feature requests. Be specific
+        about the regulatory text the project disagrees with so the fix is unambiguous.
+  - type: input
+    id: article
+    attributes:
+      label: AI Act article reference
+      description: e.g. "Article 12, paragraph 2(a)" or "Annex IV section 6"
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What does the regulation require
+      description: Quote the text or paraphrase precisely. Cite paragraph and sub-point.
+    validations:
+      required: true
+  - type: textarea
+    id: gap
+    attributes:
+      label: How does spring-aiact fall short
+      description: Describe the gap between the generated artifact (or the audit log shape, or the API surface) and the requirement.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source (regulation text, EU AI Office guidance, harmonized standard)
+      description: Link to the official source. Notified body opinions count too if you can quote them.
+    validations:
+      required: true
