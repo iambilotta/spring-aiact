@@ -171,6 +171,22 @@ public class AiActAutoConfiguration {
     }
 
     /**
+     * Health indicator wired only when Spring Boot Actuator is present on the classpath. Lives
+     * in a nested static class so the outer auto-configuration does not require the actuator
+     * to even resolve at compile time.
+     */
+    @Configuration(proxyBeanMethods = false)
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnClass(
+            org.springframework.boot.actuate.health.HealthIndicator.class)
+    static class HealthIndicatorAutoConfig {
+        @Bean
+        @ConditionalOnMissingBean(name = "aiActHealthIndicator")
+        AiActHealthIndicator aiActHealthIndicator(AiActConfigProperties props) {
+            return new AiActHealthIndicator(props);
+        }
+    }
+
+    /**
      * {@link com.iambilotta.spring.aiact.config.AiActProperties} mirror with
      * {@code @ConfigurationProperties} binding.
      */
