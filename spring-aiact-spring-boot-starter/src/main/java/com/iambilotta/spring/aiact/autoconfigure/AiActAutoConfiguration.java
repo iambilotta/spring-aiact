@@ -48,14 +48,38 @@ public class AiActAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    HmacChain aiActHmacChain(AiActConfigProperties props) {
-        String secret = props.getHmac().getSecret();
-        if ("change-me-please".equals(secret)) {
+    HmacChain aiActHmacChain(AiActConfigProperties props,
+                             org.springframework.core.env.Environment environment) {
+        com.iambilotta.spring.aiact.config.AiActProperties.Hmac hmac = props.getHmac();
+        if (hmac.isDefaultSecret()) {
+            boolean inDevProfile = isAnyProfileActive(environment, hmac.getDevelopmentProfiles());
+            if (hmac.isFailOnDefaultInProd() && !inDevProfile) {
+                throw new IllegalStateException(
+                        "spring-aiact refuses to start: aiact.hmac.secret is still the default "
+                        + "placeholder '" + com.iambilotta.spring.aiact.config.AiActProperties.Hmac.DEFAULT_SECRET_PLACEHOLDER
+                        + "'. Override aiact.hmac.secret (or aiact.hmac.secret-ref) with a real secret, "
+                        + "or activate a development profile (one of "
+                        + hmac.getDevelopmentProfiles() + "). To disable this guard explicitly, set "
+                        + "aiact.hmac.fail-on-default-in-prod=false (not recommended).");
+            }
             org.slf4j.LoggerFactory.getLogger(AiActAutoConfiguration.class)
-                    .warn("spring-aiact: aiact.hmac.secret is set to the default placeholder. "
-                            + "Override it before going to production.");
+                    .warn("spring-aiact: aiact.hmac.secret is the default placeholder. "
+                            + "Tolerated only because a development profile is active or fail-on-default-in-prod is off. "
+                            + "Override before production.");
         }
-        return HmacChain.fromUtf8(secret);
+        return HmacChain.fromUtf8(hmac.getSecret());
+    }
+
+    private static boolean isAnyProfileActive(org.springframework.core.env.Environment env,
+                                              java.util.List<String> candidates) {
+        if (candidates == null || candidates.isEmpty()) return false;
+        java.util.Set<String> active = new java.util.HashSet<>();
+        for (String p : env.getActiveProfiles()) active.add(p.toLowerCase(java.util.Locale.ROOT));
+        for (String p : env.getDefaultProfiles()) active.add(p.toLowerCase(java.util.Locale.ROOT));
+        for (String c : candidates) {
+            if (active.contains(c.toLowerCase(java.util.Locale.ROOT))) return true;
+        }
+        return false;
     }
 
     @Bean

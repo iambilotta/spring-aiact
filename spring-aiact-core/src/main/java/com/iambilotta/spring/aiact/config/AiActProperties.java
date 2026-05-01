@@ -49,15 +49,35 @@ public class AiActProperties {
     }
 
     public static class Hmac {
+        /** Sentinel value reported by {@link #isDefaultSecret()} to drive fail-fast on boot. */
+        public static final String DEFAULT_SECRET_PLACEHOLDER = "change-me-please";
+
         /** Plain-text secret. Use {@code aiact.hmac.secret-ref} when reading from a vault. */
-        private String secret = "change-me-please";
+        private String secret = DEFAULT_SECRET_PLACEHOLDER;
         /** Optional reference to a Spring Cloud Config / Vault key. */
         private String secretRef;
+        /**
+         * When {@code true} (default), the auto-configuration refuses to start if
+         * {@link #getSecret()} is still the placeholder and the active Spring profile is not one
+         * of the development profiles in {@link #getDevelopmentProfiles()}. Set to {@code false}
+         * only for emergency hotfix scenarios; the placeholder secret defeats the entire chain.
+         */
+        private boolean failOnDefaultInProd = true;
+        /** Profile names where the default secret is tolerated. Lower-case match. */
+        private java.util.List<String> developmentProfiles = java.util.List.of("dev", "test", "local");
 
         public String getSecret() { return secret; }
         public void setSecret(String secret) { this.secret = secret; }
         public String getSecretRef() { return secretRef; }
         public void setSecretRef(String secretRef) { this.secretRef = secretRef; }
+        public boolean isFailOnDefaultInProd() { return failOnDefaultInProd; }
+        public void setFailOnDefaultInProd(boolean v) { this.failOnDefaultInProd = v; }
+        public java.util.List<String> getDevelopmentProfiles() { return developmentProfiles; }
+        public void setDevelopmentProfiles(java.util.List<String> v) { this.developmentProfiles = v; }
+
+        public boolean isDefaultSecret() {
+            return DEFAULT_SECRET_PLACEHOLDER.equals(secret);
+        }
     }
 
     public static class Encryption {
