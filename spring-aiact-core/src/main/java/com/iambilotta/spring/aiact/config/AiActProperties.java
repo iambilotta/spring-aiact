@@ -107,6 +107,12 @@ public class AiActProperties {
         }
     }
 
+    /**
+     * Encryption-at-rest configuration. <strong>Status: v1.0 placeholder, not implemented in
+     * v0.1.</strong> The fields are reserved so the future implementation can be wired without a
+     * breaking property rename. Until then, deployers must rely on the underlying filesystem's
+     * encryption (LUKS, dm-crypt, EFS-at-rest, EBS-encrypted, etc.) for at-rest protection.
+     */
     public static class Encryption {
         private boolean enabled = false;
         /** Reference to a key handle (KMS arn, Vault path, JKS alias). Resolution is deployer specific. */
