@@ -11,6 +11,13 @@
 [![Maven Central](https://img.shields.io/badge/maven--central-not%20yet%20published-lightgrey.svg)](https://central.sonatype.com/)
 [![Status](https://img.shields.io/badge/status-alpha%20(v0.1)-yellow.svg)](#project-status)
 
+[**Quick start**](#quick-start-first-run-in-15-minutes) ·
+[**60-second demo**](#60-second-runnable-demo) ·
+[**FAQ**](#faq) ·
+[**Production guide**](docs/PRODUCTION.md) ·
+[**Changelog**](CHANGELOG.md) ·
+[**Security policy**](SECURITY.md)
+
 ---
 
 ## TL;DR
@@ -22,23 +29,10 @@ from annotations on your code. Three steps to get going:
 
 1. add the starter,
 2. annotate your high-risk class with `@AiActHighRiskSystem` + four companions,
-3. configure an HMAC secret and an `AiActEndpointGuard` bean. Done.
+3. configure an HMAC secret. Done in 15 minutes for a first run, ~45 minutes for a
+   production-ready deployment with real auth.
 
 The deadline for high-risk obligations is **2 August 2026**. This project ships before that.
-
-## Table of contents
-
-- [How it works in 30 seconds](#how-it-works-in-30-seconds)
-- [Why annotations and not a SaaS GRC tool](#why-annotations-and-not-a-saas-grc-tool)
-- [Quick start (15 minutes)](#quick-start-15-minutes)
-- [60-second runnable demo](#60-second-runnable-demo)
-- [Articles covered](#articles-covered-v01)
-- [REST endpoints](#rest-endpoints)
-- [Operational notes the README will not let you skip](#operational-notes-the-readme-will-not-let-you-skip)
-- [FAQ](#faq)
-- [Anti-patterns explicitly out of scope](#anti-patterns-explicitly-out-of-scope)
-- [Project status](#project-status)
-- [Roadmap](#roadmap)
 
 ## How it works in 30 seconds
 
@@ -57,23 +51,82 @@ The deadline for high-risk obligations is **2 August 2026**. This project ships 
 The annotations are the source of truth. The audit log, the Annex IV technical file, the DoC
 PDF and the dataset datasheets are build artifacts regenerated whenever the code changes.
 
-## Why annotations and not a SaaS GRC tool
+## Why annotations and not (SaaS / DIY logging)
 
-| Aspect | spring-aiact | Sprinto / Centraleyes / Credo AI |
-|---|---|---|
-| Cost | Apache 2.0 free | ~25k EUR/year SaaS subscriptions |
-| Source of truth | Code annotations | Web UI configuration |
-| Data egress | None, on-prem | Required (audit data uploaded) |
-| Refactoring safety | Removing annotation removes the claim, code review catches it | Out of band, drifts silently |
-| Compliance update cadence | Same as the code | Same as the vendor's release cycle |
-| Vendor lock-in | None, plain Markdown / NDJSON / PDF | Vendor file formats |
-| Replaces a notified body | No (anti-overclaim by design) | Sometimes implied |
+| Aspect | spring-aiact | Sprinto / Centraleyes / Credo AI | DIY (Logback + custom JSON + Confluence) |
+|---|---|---|---|
+| Cost | Apache 2.0 free | ~25k EUR/year SaaS | Ongoing engineering time |
+| Source of truth | Code annotations | Web UI configuration | Drifts (code vs Confluence) |
+| Data egress | None, on-prem | Required (audit data uploaded) | None |
+| Refactoring safety | Removing annotation removes the claim; code review catches it | Out of band, drifts silently | None; tribal knowledge |
+| Tamper evidence | HMAC chain, deletion-detecting | Vendor-specific | Usually absent |
+| Annex IV technical file | Generated, 9 sections, MD | Vendor templates | Hand-written |
+| Article 47 DoC | Generated PDF with signature placeholder | Vendor templates | Hand-written |
+| Vendor lock-in | None | High | None |
+| Replaces a notified body | No (anti-overclaim by design) | Sometimes implied | No |
+| Engineering hours to build | Hours (just annotate) | Days (vendor onboarding) | Weeks per system |
 
 The trade-off: spring-aiact does not give you a dashboard, a vendor relationship to point at,
 or a sales-to-CISO conduit. It gives you the artifacts a notified body assessor wants and a
-git-versioned source of truth. Pick accordingly.
+git-versioned source of truth. The DIY option works for one system; if you have three or more
+high-risk systems, the annotation approach pays back its setup time on the second adoption.
 
-## Quick start (15 minutes)
+## What you actually get (sample output)
+
+After one HTTP call to a method annotated `@AiActLog`, the audit log gains one record:
+
+```json
+{"event_id":"5f5f0ad6-c41b-4d08-8dd7-d7d40c8f1e23","event_kind":"INVOCATION",
+ "timestamp":"2026-04-29T21:10:32.987Z","system_id":"hiring-screener",
+ "system_version":"0.0.1","operation":"HiringScreener.score",
+ "model_id":"hiring-screener@0.0.1","input_hash":"sha256:0a7c4d7c1c5e...",
+ "output_hash":"sha256:f3e5b91a9b0e...","hash_algorithm":"SHA-256","latency_ms":3,
+ "prev_hmac":"00000000000000000000000000000000",
+ "record_hmac":"3e7c18a9b73f4cdbb5e91f2c83a7b4e1..."}
+```
+
+After one `mvn verify`, the technical file appears at
+`target/generated-docs/hiring-screener-technical-file.md`:
+
+```markdown
+# Technical File, AI Act Annex IV
+
+**System:** Hiring screener
+**System id:** `hiring-screener`
+**Provider:** ACME
+**Version:** 0.0.1
+**Annex III category:** Annex III.4 (EMPLOYMENT_AND_WORKERS_MANAGEMENT), sub-point 4(a)
+**Generated at:** 2026-04-29T21:12:26Z
+
+## 1. General description
+
+**Intended purpose (summary).** Score CV applicants for an engineering role.
+**Deployment context.** HR triage before any human review.
+
+**Intended user categories:**
+- HR specialists
+
+**Foreseeable misuse:**
+- Auto-rejection without human review
+- Use outside the engineering role context
+[...nine sections total, populated from the @AiAct* annotations...]
+```
+
+And the chain verifier confirms the HMAC chain is valid:
+
+```bash
+$ curl -u audit:audit-pass http://localhost:8080/aiact/log/verify?system=hiring-screener
+{"system_id":"hiring-screener","inspected":3,"invalid":0,"failed_event_ids":[]}
+```
+
+When the file is tampered with on disk, the verifier reports the exact event ids that broke
+the chain. See [`examples/docker-compose/README.md`](examples/docker-compose/README.md) for a
+walk-through of the tamper test.
+
+## Quick start (first run in 15 minutes)
+
+> Goal of this section: get the audit log writing on your laptop. Production-grade auth wiring
+> is the next section after this one.
 
 ### 1. Add the starter (1 minute)
 
@@ -126,12 +179,16 @@ The Maven plugin will fail your build if any of the four companion annotations
 (`@AiActIntendedPurpose`, `@AiActOversight`, `@AiActDataset`, plus `@AiActHighRiskSystem`
 itself) is missing.
 
-### 3. Configure (5 minutes)
+### 3. Configure (3 minutes)
 
 ```yaml
+spring:
+  profiles:
+    active: dev                      # tolerates the default HMAC secret on this profile
+
 aiact:
   hmac:
-    secret: ${AIACT_HMAC_SECRET}     # required, generate with: openssl rand -hex 32
+    secret: ${AIACT_HMAC_SECRET}     # generate with: openssl rand -hex 32
   log-dir: /var/log/aiact
   retention: P10Y
   audit:
@@ -139,38 +196,10 @@ aiact:
   endpoints:
     enabled: true
     base-path: /aiact
-    allow-without-guard: false       # default; production must register a real guard
+    allow-without-guard: true        # FIRST RUN ONLY. Production wires a real guard, see below.
 ```
 
-### 4. Wire the auth guard (3 minutes)
-
-The starter's default guard refuses every `/aiact/**` call. Register a real one:
-
-```java
-@Bean
-AiActEndpointGuard aiActEndpointGuard() {
-    return (systemId, action) -> {
-        var auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || !auth.isAuthenticated()) {
-            return AiActEndpointGuard.Decision.deny("not-authenticated");
-        }
-        boolean canRead = auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("AIACT_READ"));
-        return switch (action) {
-            case EXPORT_LOG, VERIFY_LOG, READ_HEAD ->
-                canRead ? AiActEndpointGuard.Decision.allow()
-                        : AiActEndpointGuard.Decision.deny("requires AIACT_READ");
-            case SUBMIT_OVERRIDE -> /* check AIACT_WRITE authority */ ...;
-        };
-    };
-}
-```
-
-The starter does not depend on Spring Security; OPA, API key checks, mTLS subject mappings or
-any other auth source plug into the same SPI. Full examples in
-[docs/PRODUCTION.md](docs/PRODUCTION.md).
-
-### 5. Wire the Maven plugin (1 minute)
+### 4. Wire the Maven plugin (1 minute)
 
 ```xml
 <plugin>
@@ -188,18 +217,62 @@ any other auth source plug into the same SPI. Full examples in
 </plugin>
 ```
 
-### 6. What you get
+### 5. Run
 
-After the next `mvn verify`:
+```bash
+mvn verify              # generates the technical file + DoC + datasheets
+mvn spring-boot:run     # boots the app, AOP advisor wires the audit log
+```
 
-- `target/generated-docs/{systemId}-technical-file.md` (Annex IV, 9 sections)
-- `target/generated-docs/{systemId}-doc.pdf` (Article 47 DoC, signature placeholder)
-- `target/generated-docs/{systemId}-dataset-{id}.md` (one per `@AiActDataset`)
+The first invocation of any `@AiActLog` method appends a record to
+`${aiact.log-dir}/{systemId}.ndjson`. Verify the chain at
+`GET /aiact/log/verify?system={systemId}` (returns `invalid: 0`).
 
-After the first runtime invocation:
+## Production auth wiring (next 30 minutes)
 
-- `${aiact.log-dir}/{systemId}.ndjson` (one Article 12 record per `@AiActLog` call)
-- `GET /aiact/log/verify?system={systemId}` returns `invalid: 0`
+The first-run config above sets `allow-without-guard: true`, which lets any local caller hit
+`/aiact/**`. **Production must register a real `AiActEndpointGuard` bean.** Minimal Spring
+Security wiring:
+
+```java
+@Bean
+AiActEndpointGuard aiActEndpointGuard() {
+    return (systemId, action) -> {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            return AiActEndpointGuard.Decision.deny("not-authenticated");
+        }
+        boolean canRead = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("AIACT_READ"));
+        boolean canWrite = auth.getAuthorities().stream()
+                .anyMatch(a -> a.getAuthority().equals("AIACT_WRITE"));
+        return switch (action) {
+            case EXPORT_LOG, VERIFY_LOG, READ_HEAD ->
+                canRead ? AiActEndpointGuard.Decision.allow()
+                        : AiActEndpointGuard.Decision.deny("requires AIACT_READ");
+            case SUBMIT_OVERRIDE ->
+                canWrite ? AiActEndpointGuard.Decision.allow()
+                         : AiActEndpointGuard.Decision.deny("requires AIACT_WRITE");
+        };
+    };
+}
+```
+
+Then flip the production yaml:
+
+```yaml
+spring:
+  profiles:
+    active: prod
+
+aiact:
+  endpoints:
+    allow-without-guard: false       # production default
+```
+
+The starter does not depend on Spring Security; OPA, API key checks, mTLS subject mappings,
+or any other auth source plug into the same SPI. OPA + multi-tenant examples in
+[`docs/PRODUCTION.md`](docs/PRODUCTION.md).
 
 ## 60-second runnable demo
 
@@ -324,9 +397,23 @@ ecosystem has moved on; backporting would mean a fork, not a configuration toggl
 
 ## Project status
 
-Alpha (v0.1). The surface is stable, the tests are deliberate, the production deployment guide
-is real. Maven Central publication and a production case study land before v0.5 (July 2026).
-Expect breaking changes between alpha and v1.0; review the `CHANGELOG.md` on every bump.
+Alpha (v0.1). The surface is stable enough to evaluate, the tests are deliberate, the
+production deployment guide is real. Maven Central publication and a production case study
+land before v0.5 (July 2026). Expect breaking changes between alpha and v1.0; review
+[`CHANGELOG.md`](CHANGELOG.md) on every bump.
+
+This is a single-maintainer project. Bug reports and security disclosures get prioritized over
+feature requests; see [`SECURITY.md`](SECURITY.md) and [`CONTRIBUTING.md`](CONTRIBUTING.md).
+
+## Adopters
+
+If you are running spring-aiact in production, open a PR adding a row here. Anonymous entries
+("EU mid-market HR-tech, ~250 employees, Annex III.4") are welcome and useful as social proof
+without breaking anyone's legal review process.
+
+| Organization | Industry | Annex III categories | Adopted since |
+|---|---|---|---|
+| _yours could be here_ | | | |
 
 ## Roadmap
 

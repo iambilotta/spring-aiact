@@ -10,42 +10,78 @@ All notable changes to this project are documented here. Format follows
 - `AiActEndpointGuard` SPI with `DenyAllAiActEndpointGuard` (default) and
   `AllowAllAiActEndpointGuard` (opt-in via `aiact.endpoints.allow-without-guard=true`). Every
   REST endpoint refuses calls until the deployer registers a real guard.
+- `AiActMockEndpointGuard` test helper (production source, no test-jar overhead) with a
+  fluent builder for allow/deny rules per (system id, action). Lets a consumer write
+  integration tests against the spring-aiact endpoints without standing up Spring Security.
 - Fail-fast on the default HMAC secret (`change-me-please`) in non-development profiles.
-  Configurable via `aiact.hmac.fail-on-default-in-prod` and
-  `aiact.hmac.development-profiles`.
-- `MetadataSanitizer` that whitelists keys, truncates at 256 chars, and replaces raw exception
-  messages with a SHA-256 fingerprint to keep PII out of the audit metadata.
+  Configurable via `aiact.hmac.fail-on-default-in-prod` and `aiact.hmac.development-profiles`.
+- `MetadataSanitizer` that whitelists keys, truncates values at 256 chars, and replaces raw
+  exception messages with a SHA-256 fingerprint to keep PII out of audit metadata.
 - Multi-process safe append: every audit write acquires an OS-level `FileLock` and tails the
   file under the lock to recompute the chain head from disk. Configurable via
-  `aiact.audit.single-writer-lock` (default `true`).
+  `aiact.audit.single-writer-lock` (default `true`). Required in Kubernetes deployments
+  where more than one pod writes to the same NDJSON file.
 - `HighRiskAnnotationValidator` extracted from `VerifyMojo` for unit testability. Fixes a bug
   where any `@AiActDataset` anywhere on the classpath satisfied every high-risk system; the
   search is now scoped to the same package.
-- 35+ new tests across the AOP advisor, retention pruning, oversight service, audit export
-  packager and validator. Total 53 tests at this commit, up from 18.
-- `docs/PRODUCTION.md` with Spring Security wiring, multi-pod caveats, key rotation playbook,
-  retention export workflow.
-- GitHub Actions CI workflow (matrix on JDK 21 and JDK 25), `SECURITY.md`, this `CHANGELOG.md`,
-  Renovate config, OWASP Dependency-Check Maven profile.
+- `additional-spring-configuration-metadata.json` for IDE completion on every `aiact.*`
+  property with descriptions, defaults and hint values.
+- `AiActStartupReporter` logs a single structured INFO line at `ApplicationReady` time with
+  the active configuration (`endpoints status`, `multi-process`, `retention`, `hmac status`,
+  `log-dir`). Two warnings follow when the default HMAC secret or the unsafe permit-all
+  guard are detected.
+- Actionable error messages: deny reasons in 403 responses and validation exceptions in
+  `OversightService` now include the configuration key or field that the caller should
+  change, plus a documentation pointer where applicable.
+- `AiActHealthIndicator` exposes `/actuator/health/aiact`. UP/DOWN reflects log directory
+  writability and HMAC secret status; the details map carries `last-append-system`,
+  retention, multi-process flag, endpoint enablement. Auto-configured only when Spring Boot
+  Actuator is on the classpath (optional dependency).
+- `examples/docker-compose/` end-to-end runnable demo: sample app + Caddy reverse proxy with
+  basic auth + persistent volume. Includes a tamper test that walks through editing the
+  NDJSON on disk and watching `/aiact/log/verify` flag the mismatch.
+- 41 new tests across the AOP advisor, retention pruning, oversight service, audit export
+  packager, validator, mock guard, and HMAC fail-fast. Total 56 tests, up from 18 at the
+  scaffolding commit.
+- `docs/PRODUCTION.md` with eight sections covering HMAC secret outside the source tree,
+  `AiActEndpointGuard` wiring (Spring Security and OPA examples), the multi-pod / shared-FS
+  support matrix with a `flock` verification recipe, the HMAC key rotation playbook, the
+  retention export workflow, observability, the CI gate snippet, and what the deployer
+  still owns under the AI Act regardless of the starter.
+- GitHub Actions CI workflow with a JDK 21 + JDK 25 build matrix and a PR-only OWASP
+  Dependency-Check job.
+- `SECURITY.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `renovate.json`, OWASP Dependency-Check
+  Maven profile (`-Pdependency-check`).
 
 ### Changed
+- README rewritten UX/DX-first: TL;DR in three lines, status badge for the alpha state,
+  comparison table vs Sprinto / Centraleyes / Credo AI / DIY logger, ASCII flow diagram,
+  numbered quick-start with per-step time stamps, FAQ section anticipating the seven most
+  common objections, REST endpoint table with the matching `Guard.Action` enum value.
 - `NdjsonAuditLogService` constructor takes an explicit `multiProcessSafe` flag. The
   legacy single-arg constructor still works and now defaults to the safe path.
 - `OversightService` gains a constructor accepting `MetadataSanitizer`. The legacy single-arg
   constructor wires a default sanitizer.
-- README documents the operational edges (multi-pod, retention chain seed gap, encryption
-  status as v1.0 placeholder) instead of glossing over them.
+- `ClasspathScanner` no longer swallows `Throwable` silently; the failure is logged at debug
+  level so `mvn -X` surfaces classes that could not be loaded for annotation scanning.
 
 ### Removed
 - Dead dependencies `spring-boot-starter-jdbc` and `com.h2database:h2` from
-  `spring-aiact-core`. They were declared but never used; the future JDBC sink will land in a
-  separate optional module.
+  `spring-aiact-core`. They were declared but never used; the future JDBC sink will land in
+  a separate optional module.
 
 ### Security
 - Audit endpoints are now deny-by-default. Previously they were unauthenticated, which would
   have allowed any caller able to reach the application port to read the full Article 12
   audit log and submit fake oversight overrides.
-- The HMAC secret guard prevents shipping to production with the placeholder secret unnoticed.
+- The HMAC secret guard prevents shipping to production with the placeholder secret.
+- `MetadataSanitizer` blocks raw exception messages from reaching the audit log, closing a
+  PII leak path the previous implementation left open.
+
+### Documentation
+- README links to `CHANGELOG.md`, `SECURITY.md`, `docs/PRODUCTION.md`, `CONTRIBUTING.md` and
+  `examples/docker-compose/`. Each link is referenced from the section that needs it, not
+  collected at the bottom.
 
 ## [0.1.0] - unreleased
 
