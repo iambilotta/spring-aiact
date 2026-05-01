@@ -4,10 +4,6 @@
  */
 package com.iambilotta.spring.aiact.mavenplugin;
 
-import com.iambilotta.spring.aiact.annotation.AiActDataset;
-import com.iambilotta.spring.aiact.annotation.AiActHighRiskSystem;
-import com.iambilotta.spring.aiact.annotation.AiActIntendedPurpose;
-import com.iambilotta.spring.aiact.annotation.AiActOversight;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -20,7 +16,6 @@ import org.apache.maven.project.MavenProject;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,34 +53,11 @@ public class VerifyMojo extends AbstractMojo {
         List<Path> deps = MavenClasspath.compileClasspath(project);
         try (ClasspathScanner scanner = new ClasspathScanner(classesDir, deps).asCloseable()) {
             List<Class<?>> classes = scanner.loadAllClasses();
-            List<String> violations = new ArrayList<>();
-            for (Class<?> type : classes) {
-                AiActHighRiskSystem hr = type.getAnnotation(AiActHighRiskSystem.class);
-                if (hr == null) continue;
-                if (type.getAnnotation(AiActIntendedPurpose.class) == null) {
-                    violations.add(type.getName() + ": missing @AiActIntendedPurpose (Article 13).");
-                }
-                if (type.getAnnotation(AiActOversight.class) == null) {
-                    violations.add(type.getName() + ": missing @AiActOversight (Article 14).");
-                }
-                if (!datasetOptional
-                        && type.getAnnotationsByType(AiActDataset.class).length == 0
-                        && !classpathHasDataset(classes, hr)) {
-                    violations.add(type.getName()
-                            + ": missing @AiActDataset (Article 10) on this class or in the same package.");
-                }
-            }
+            List<String> violations = new HighRiskAnnotationValidator(datasetOptional).validate(classes);
             report(violations);
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to scan classpath", e);
         }
-    }
-
-    private boolean classpathHasDataset(List<Class<?>> classes, AiActHighRiskSystem hr) {
-        for (Class<?> c : classes) {
-            if (c.getAnnotationsByType(AiActDataset.class).length > 0) return true;
-        }
-        return false;
     }
 
     private void report(List<String> violations) throws MojoFailureException {

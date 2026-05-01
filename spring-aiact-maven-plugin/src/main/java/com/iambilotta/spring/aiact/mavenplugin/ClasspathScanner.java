@@ -4,6 +4,9 @@
  */
 package com.iambilotta.spring.aiact.mavenplugin;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,6 +22,8 @@ import java.util.stream.Stream;
  * isolated, so the build classpath is not polluted.
  */
 final class ClasspathScanner implements AutoCloseable {
+
+    private static final Logger log = LoggerFactory.getLogger(ClasspathScanner.class);
 
     private final Path classesRoot;
     private final URLClassLoader classLoader;
@@ -53,8 +58,13 @@ final class ClasspathScanner implements AutoCloseable {
                     String name = toFqcn(classesRoot, p);
                     try {
                         classes.add(Class.forName(name, false, classLoader));
-                    } catch (Throwable ignored) {
-                        // class with missing transitive dep, skip silently
+                    } catch (Throwable t) {
+                        // Class likely has a missing transitive dependency. We surface this
+                        // at debug level so it can be turned on with -X without polluting a
+                        // normal build, but it never disappears completely: a class that does
+                        // not load also cannot be checked for the AI Act annotations, which
+                        // is a soft compliance gap the developer should know about.
+                        log.debug("spring-aiact: could not load class {} during scan", name, t);
                     }
                 });
         }
