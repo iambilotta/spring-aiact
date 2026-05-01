@@ -1,0 +1,24 @@
+# Caddy v2 reverse proxy for the spring-aiact demo.
+#
+# Routes:
+#   /aiact/**         -> protected by basic auth (audit / audit-pass).
+#   /hiring/**        -> open, so curl can post candidate scores without auth.
+#   everything else   -> proxied to the sample app unprotected.
+#
+# This wiring is the demo equivalent of the AiActEndpointGuard discussed in
+# docs/PRODUCTION.md. Real deployments should integrate Spring Security or OPA
+# in-process; the proxy-level basic auth here is purely to show the deny path.
+
+:8080 {
+    handle /aiact/* {
+        # bcrypt of "audit-pass"
+        basic_auth {
+            audit $2a$14$gp6gIm3JDwEPZgeFfX7nJ.VIz1VV5yfcEa05Bn4mJgz9kYpmuT1Du
+        }
+        reverse_proxy sample:8081
+    }
+
+    handle {
+        reverse_proxy sample:8081
+    }
+}
