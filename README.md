@@ -8,7 +8,7 @@
 [![Java](https://img.shields.io/badge/java-21%2B-orange.svg)](https://openjdk.org/projects/jdk/21/)
 [![Spring Boot](https://img.shields.io/badge/spring--boot-3.5%2B-green.svg)](https://spring.io/projects/spring-boot)
 [![CI](https://github.com/iambilotta/spring-aiact/actions/workflows/ci.yml/badge.svg)](https://github.com/iambilotta/spring-aiact/actions/workflows/ci.yml)
-[![Maven Central](https://img.shields.io/badge/maven--central-not%20yet%20published-lightgrey.svg)](https://central.sonatype.com/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.iambilotta.spring/spring-aiact-spring-boot-starter.svg?label=maven%20central)](https://central.sonatype.com/artifact/com.iambilotta.spring/spring-aiact-spring-boot-starter)
 [![Status](https://img.shields.io/badge/status-alpha%20(v0.1)-yellow.svg)](#project-status)
 
 [**Quick start**](#quick-start-first-run-in-15-minutes) ·
