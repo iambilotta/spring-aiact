@@ -1,0 +1,140 @@
+{
+  "groups": [
+    {
+      "name": "aiact",
+      "type": "com.iambilotta.spring.aiact.config.AiActProperties",
+      "description": "Top-level configuration for the spring-aiact starter. Disabling aiact.enabled fully turns off the AOP advisor, the audit log, the REST endpoints and the retention scheduler."
+    },
+    {
+      "name": "aiact.endpoints",
+      "type": "com.iambilotta.spring.aiact.config.AiActProperties$Endpoints",
+      "description": "REST endpoint configuration for /aiact/log/** and /aiact/oversight/**."
+    },
+    {
+      "name": "aiact.hmac",
+      "type": "com.iambilotta.spring.aiact.config.AiActProperties$Hmac",
+      "description": "HMAC chain configuration. The secret is the only thing standing between a tampered audit log and a clean one; treat it like a master key."
+    },
+    {
+      "name": "aiact.encryption",
+      "type": "com.iambilotta.spring.aiact.config.AiActProperties$Encryption",
+      "description": "Encryption-at-rest. v1.0 placeholder, not implemented in v0.1. Rely on filesystem encryption (LUKS, EFS-at-rest, EBS-encrypted) until the implementation lands."
+    },
+    {
+      "name": "aiact.audit",
+      "type": "com.iambilotta.spring.aiact.config.AiActProperties$Audit",
+      "description": "Append-time consistency settings."
+    },
+    {
+      "name": "aiact.retention-sweeper",
+      "description": "Daily retention sweeper that prunes records older than aiact.retention. Disable in tests and in deployments that prune externally."
+    }
+  ],
+  "properties": [
+    {
+      "name": "aiact.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Master switch for the starter. When false the entire AI Act surface is inactive.",
+      "defaultValue": true
+    },
+    {
+      "name": "aiact.log-dir",
+      "type": "java.nio.file.Path",
+      "description": "Directory holding the per-system NDJSON audit files. Must be writable by the application user. On Kubernetes, point to a persistent volume; never to an ephemeral emptyDir.",
+      "defaultValue": "aiact-logs"
+    },
+    {
+      "name": "aiact.retention",
+      "type": "java.time.Period",
+      "description": "Retention horizon for the Article 12 audit log. Default aligns with the Article 47 declaration of conformity archival window. Format ISO-8601, for example P10Y or P6M.",
+      "defaultValue": "P10Y"
+    },
+    {
+      "name": "aiact.endpoints.enabled",
+      "type": "java.lang.Boolean",
+      "description": "When false, the /aiact/log/** and /aiact/oversight/** controllers are not registered.",
+      "defaultValue": true
+    },
+    {
+      "name": "aiact.endpoints.base-path",
+      "type": "java.lang.String",
+      "description": "Path prefix for the spring-aiact REST endpoints. Change only when colliding with an existing route.",
+      "defaultValue": "/aiact"
+    },
+    {
+      "name": "aiact.endpoints.allow-without-guard",
+      "type": "java.lang.Boolean",
+      "description": "When true, the starter wires the unsafe AllowAllAiActEndpointGuard. Use only in local development. Production deployments must register a custom AiActEndpointGuard bean.",
+      "defaultValue": false
+    },
+    {
+      "name": "aiact.hmac.secret",
+      "type": "java.lang.String",
+      "description": "Plain-text HMAC secret. In production prefer aiact.hmac.secret-ref pointing at a Vault / KMS reference. Generate with `openssl rand -hex 32`.",
+      "defaultValue": "change-me-please"
+    },
+    {
+      "name": "aiact.hmac.secret-ref",
+      "type": "java.lang.String",
+      "description": "Optional reference to a Spring Cloud Config / Vault key. Resolution is deployer specific."
+    },
+    {
+      "name": "aiact.hmac.fail-on-default-in-prod",
+      "type": "java.lang.Boolean",
+      "description": "When true (default), the auto-configuration refuses to start if aiact.hmac.secret is still the placeholder value 'change-me-please' and no development profile is active. Turn off only for emergency hotfix scenarios.",
+      "defaultValue": true
+    },
+    {
+      "name": "aiact.hmac.development-profiles",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Profile names where the default HMAC secret is tolerated. Lower-case match.",
+      "defaultValue": ["dev", "test", "local"]
+    },
+    {
+      "name": "aiact.encryption.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Reserved for v1.0. Setting this to true in v0.1 has no effect; do not interpret as live encryption-at-rest.",
+      "defaultValue": false
+    },
+    {
+      "name": "aiact.encryption.key-ref",
+      "type": "java.lang.String",
+      "description": "Reserved for v1.0. Reference to a key handle (KMS arn, Vault path, JKS alias)."
+    },
+    {
+      "name": "aiact.encryption.algorithm",
+      "type": "java.lang.String",
+      "description": "Reserved for v1.0. JCA cipher transformation. Currently unused.",
+      "defaultValue": "AES/GCM/NoPadding"
+    },
+    {
+      "name": "aiact.audit.single-writer-lock",
+      "type": "java.lang.Boolean",
+      "description": "When true (default), every audit append acquires an OS-level FileLock and tails the file under the lock to recompute the chain head from disk. Required when more than one pod / JVM writes to the same NDJSON file. Imposes one fsync-class operation per append (~1-3 ms on local SSD).",
+      "defaultValue": true
+    },
+    {
+      "name": "aiact.retention-sweeper.enabled",
+      "type": "java.lang.Boolean",
+      "description": "When true (default), a scheduled task prunes audit records older than aiact.retention. Disable when retention is handled externally or in tests.",
+      "defaultValue": true
+    },
+    {
+      "name": "aiact.retention-sweeper.cron",
+      "type": "java.lang.String",
+      "description": "Cron expression for the retention sweeper. Defaults to 03:00 UTC daily.",
+      "defaultValue": "0 0 3 * * *"
+    }
+  ],
+  "hints": [
+    {
+      "name": "aiact.hmac.development-profiles",
+      "values": [
+        {"value": "dev"},
+        {"value": "test"},
+        {"value": "local"},
+        {"value": "ci"}
+      ]
+    }
+  ]
+}

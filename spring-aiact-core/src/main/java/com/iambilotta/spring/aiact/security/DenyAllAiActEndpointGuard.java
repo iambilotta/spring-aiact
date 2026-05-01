@@ -31,6 +31,8 @@ public class DenyAllAiActEndpointGuard implements AiActEndpointGuard {
                     + "docs/PRODUCTION.md). Set aiact.endpoints.allow-without-guard=true "
                     + "to silence this with the unsafe permit-all guard during local dev.");
         }
-        return Decision.deny("no-guard-configured");
+        return Decision.deny(
+                "no-guard-configured: register an AiActEndpointGuard bean (see docs/PRODUCTION.md) "
+                + "or set aiact.endpoints.allow-without-guard=true for local development only.");
     }
 }

@@ -162,6 +162,14 @@ public class AiActAutoConfiguration {
         return new AuditExportPackager(hmac);
     }
 
+    @Bean
+    AiActStartupReporter aiActStartupReporter(
+            AiActConfigProperties props,
+            org.springframework.beans.factory.ObjectProvider<
+                    com.iambilotta.spring.aiact.security.AiActEndpointGuard> guardProvider) {
+        return new AiActStartupReporter(props, guardProvider);
+    }
+
     /**
      * {@link com.iambilotta.spring.aiact.config.AiActProperties} mirror with
      * {@code @ConfigurationProperties} binding.
