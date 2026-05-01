@@ -27,14 +27,12 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
 
-      - name: Verify formatting and compile
-        run: mvn -B -ntp -V validate compile
-
-      - name: Run tests
-        run: mvn -B -ntp -V test
-
-      - name: Run plugin against sample
-        run: mvn -B -ntp -V -DskipTests verify
+      # The reactor builds the maven-plugin module first; its descriptor is
+      # generated at process-classes, which is required before the sample
+      # module can resolve the plugin. We therefore run the full verify
+      # lifecycle here rather than splitting compile / test / verify.
+      - name: Build, test and run plugin against sample
+        run: mvn -B -ntp -V verify
 
       - name: Upload generated docs (sample)
         if: always()
