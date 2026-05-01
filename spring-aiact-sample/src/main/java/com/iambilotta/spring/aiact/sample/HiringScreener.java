@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 /**
  * Demonstration high-risk AI system: a fake CV scoring engine. The annotation set is the entire
- * point of the sample, the scoring math is a placeholder.
+ * point of the sample, the scoring math is a deliberately trivial placeholder
+ * ({@code length / 1000}). This class is not, and is not intended to be, a usable hiring
+ * screener; do not deploy it. See the README for the supported real-world adoption path.
  */
 @Service
 @AiActHighRiskSystem(
