@@ -32,3 +32,12 @@ A Spring AOP advisor (`AiActLoggingAspect`) registered as a starter bean. The po
 **Java agent with Byte Buddy.** Same operational cost as AspectJ LTW, with the added cost of authoring and shipping a custom agent.
 
 **Compile-time annotation processor that rewrites bytecode.** Possible (Lombok-style) but breaks reproducibility expectations: adopters auditing the compiled classes would see code that does not match `src/main/java`. Bad signal for a compliance library.
+
+## Why this matters
+
+The AOP choice is what makes the library a one-line adopter experience: add the starter, annotate the method, done. If the integration cost ever rises above "one line of code in your service", the wedge against AI Act compliance via SaaS or DIY collapses. AspectJ LTW would have been technically equivalent but operationally a different product.
+
+## References
+
+- `AiActLoggingAspect` lives in `spring-aiact-core/src/main/java/.../audit/`.
+- Self-invocation limitation is documented in the README "Operational notes" section. The `@AiActLog` placement convention is on the public service entry point.

@@ -13,6 +13,7 @@ The point is honesty: a future contributor (or future me) can re-evaluate a deci
 - [ADR-0005](0005-jitpack-distribution-v1.md): JitPack as the canonical distribution for v1.x; Maven Central deferred.
 - [ADR-0006](0006-internal-objectmapper-not-a-bean.md): The audit-record `ObjectMapper` is an implementation detail, not a Spring bean.
 - [ADR-0007](0007-typed-chain-head-record.md): `AuditLogService.head()` returns `ChainHead` record, not `Map<String, String>`.
+- [ADR-0008](0008-encryption-at-rest-deferred.md) [proposed]: Live encryption-at-rest deferred to v1.2.x; filesystem encryption is the v1.x answer.
 
 ## How to add an ADR
 

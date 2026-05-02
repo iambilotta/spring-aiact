@@ -30,3 +30,14 @@ v1.0.0 onward: the audit-record mapper is **not** a Spring bean. It is built by 
 **Wrap the mapper in a domain type `record AiActAuditMapper(ObjectMapper delegate)` and bean-publish that.** Solves the shadowing issue but introduces a wrapper class with no other purpose. Pure ceremony.
 
 **Keep the bean and document the qualifier as the override extension.** Doubles down on the wrong shape; the audit-record mapper is not a logical extension point.
+
+## Why this matters
+
+The lesson is "do not expose implementation-detail beans of popular framework types into the application context". A library that publishes an `ObjectMapper`, a `RestTemplate`, a `DataSource`, even a `Clock` is one `@ConditionalOnMissingBean` away from breaking the consumer's app silently. The lesson generalises beyond this ADR: prefer private factories for any value that is a serialiser, formatter, or other dependency the framework auto-configures.
+
+## References
+
+- Symptom commit (the bug surfaced via the demo's POST /customers returning 400): `c57a338` (PR #1, conservative `defaultCandidate=false` patch).
+- Architectural fix: `e5bd41a` (PR #3, this ADR's enacting commit).
+- Issue #2 closed by PR #3.
+- Pinned by `ObjectMapperIsolationTest` and `PayloadHasherDeterminismTest` in `spring-aiact-spring-boot-starter/src/test/java/.../autoconfigure/`.

@@ -25,6 +25,10 @@ Concretely the eight annotations (`@AiActHighRiskSystem`, `@AiActIntendedPurpose
 - The annotations live with the code. The version-controlled history that the company already audits also documents every change to the AI Act dossier.
 - Caveat: this is the source of truth for the **dossier**, not the **claim**. `@AiActAccuracyMetric(threshold = ">=0.92")` finishes in the technical file regardless of whether the model actually meets that threshold; the accuracy *test* remains the engineering team's responsibility. The library is evidence assembly, not validation.
 
+## Why this matters
+
+This is the **principle that constrains every other decision** in the project. If the source of truth ever moves out of the code, half the library's value disappears overnight: drift between dossier and runtime is exactly the failure mode we are paid to remove. Every later ADR (sink shape, SPI design, plugin behaviour) gets vetoed if it weakens this principle. When in doubt: the answer is whatever keeps the Java symbol authoritative.
+
 ## Alternatives considered
 
 **External YAML config under `src/main/resources/aiact.yaml`.** Detached from the Java class. A rename of the class does not move the YAML; the file drifts. Same failure mode as the `.docx` we are replacing.
@@ -32,3 +36,8 @@ Concretely the eight annotations (`@AiActHighRiskSystem`, `@AiActIntendedPurpose
 **SaaS governance dashboard (Sprinto, Centraleyes, Credo AI).** Adopters pay 25k EUR/year, audit data leaves the on-prem boundary, dashboard configuration drifts from the running system. Net negative for our target.
 
 **Spring `@ConfigurationProperties` shape.** Plausible but has the same drift problem as YAML at one remove: the binding is to the property tree, not to the class. Renaming the class leaves the property names intact.
+
+## References
+
+- The `spring-aiact-core` annotation set was finalised before the v0.1.0 tag; see `git log --oneline -- spring-aiact-core/src/main/java/com/iambilotta/spring/aiact/annotation` for the iterations.
+- The `mvn verify` enforcement that fails on a missing companion annotation was added together with the Maven plugin in the early commits and pinned by `spring-aiact-sample`.

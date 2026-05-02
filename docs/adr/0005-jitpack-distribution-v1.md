@@ -16,7 +16,9 @@ The library is in v1.x with the goal of being adoptable but the maintainer's ban
 
 ## Decision
 
-v1.0 and v1.1 distribute via JitPack. Coordinates published in the README:
+JitPack ships in five minutes; Sonatype namespace verification takes 5-15 days wall-clock. v1.0 was tagged within a one-day shipping window and JitPack was the realistic option. v1.1 stays on JitPack because nothing has forced our hand to migrate yet.
+
+Coordinates published in the README:
 
 ```
 com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:v1.1.0
@@ -38,3 +40,13 @@ Maven Central publication is queued behind a Sonatype namespace request for `com
 **GitHub Packages.** Rejected: adopter token requirement is friction.
 
 **Self-hosted Nexus.** Over-engineering for a single-maintainer project at this stage.
+
+## Why this matters
+
+We are constantly tempted to pre-optimise for "production-grade signal" before any adopter has shown interest. JitPack is the right call until a real adopter asks for Maven Central. Spending two weeks on Sonatype before the first user values discipline only on paper. The honest version of this ADR is "shipped now, will revisit when the demand exists".
+
+## References
+
+- The first JitPack release tag is `v0.1.1` (commit `b26cee2`). v0.1.0 build had failed on JitPack because of an outdated Maven version on JitPack's sandbox; the fix was the Maven Wrapper (commit `533f7a7`).
+- Maven Central scaffolding (release.yml workflow, Sonatype Central plugin in pluginManagement) is already wired and waiting. See the `release` profile in `pom.xml`.
+- This ADR will be revisited when a v1.x adopter explicitly asks for Maven Central.

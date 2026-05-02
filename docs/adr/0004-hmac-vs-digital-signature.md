@@ -31,3 +31,13 @@ v1.0 ships HMAC chain. The secret is provided as `aiact.hmac.secret` (or `secret
 **Digital signature per record with HSM-bound key.** Genuinely stronger: the signing key never leaves the HSM, so an attacker with full host compromise still cannot forge records. Operationally heavier (HSM provisioning, signing latency, HSM availability as a hard dependency on the request path). Plausible v2 add-on for adopters who already run HSMs; not a v1 default.
 
 **Merkle tree over the file with periodic root anchoring on a public ledger.** Stronger property but very heavy operationally. Out of scope.
+
+## Why this matters
+
+HMAC is "good enough cryptography that fits the operational budget of a small Spring Boot team". Digital signatures with HSM are stronger but cost a vendor relationship and a hard runtime dependency. We picked the option an adopter can operate alone with one secret in their existing vault. The threat model in `SECURITY.md` documents what we accept by making this choice.
+
+## References
+
+- `HmacChain` and `HmacChain.CHAIN_SEED` in `spring-aiact-core/src/main/java/.../audit/`.
+- Threat model: see `SECURITY.md` "Threat model (1-page summary)" section, rows S/T/R.
+- Rotation procedure: `docs/PRODUCTION.md`.

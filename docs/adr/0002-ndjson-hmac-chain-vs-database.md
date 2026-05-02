@@ -28,6 +28,10 @@ A JDBC sink is a planned optional module for a future minor; the interface `Audi
 - A retention prune creates a verifier "false positive" at the boundary record (the kept slice carries a `prev_hmac` whose predecessor was deleted). Documented in `RetentionPolicyServiceTest` and in the README operational notes.
 - Multi-pod deployments require the `single-writer-lock` semantics (default ON): each append acquires an OS file lock, tails the file under the lock, recomputes the chain head from disk. On NFSv3 without lockd the lock is unreliable; the README points adopters at NFSv4 or a single-writer pod.
 
+## Why this matters
+
+Article 12 is the load-bearing claim of the entire library. If the audit log can be silently edited or deleted, every other promise we make collapses. The HMAC chain is what turns "we wrote a record" into "we wrote a record and a third party can prove it". The choice of a flat NDJSON file over a database is secondary, the integrity property is the point.
+
 ## Alternatives considered
 
 **Postgres table by default.** Operationally heavier on day one (migration to apply, connection pool sized, retention TTL job), and the chain integrity story is the same (HMAC per row). Better as opt-in for adopters who already centralise audit in the DB.
@@ -35,3 +39,9 @@ A JDBC sink is a planned optional module for a future minor; the interface `Audi
 **Append-only object storage (S3 with object-lock).** Strong tamper resistance from infrastructure, but introduces a hard cloud dependency and adds latency on every append. Rejected for v1; an `S3AuditLogService` is plausible as a separate optional module if a real adopter asks.
 
 **Digital signatures per record (asymmetric).** Stronger than HMAC if the private key never leaves a trust boundary, but the operational cost (key generation, rotation, custody) is much higher and the threat model adoption-side rarely justifies it. The README threat model in `SECURITY.md` documents the trade-off.
+
+## References
+
+- `NdjsonAuditLogService` lives under `spring-aiact-core/src/main/java/.../audit/`. Tamper-evidence pinned by `RetentionPolicyServiceTest` and the demo's `TamperEvidenceIT`.
+- The retention boundary "false positive" is a deliberate trade documented in `RetentionPolicyServiceTest`.
+- `single-writer-lock` is on by default since v0.1.0; rationale lives next to `AiActProperties.Audit`.

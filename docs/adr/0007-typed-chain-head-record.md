@@ -32,3 +32,13 @@ v1.1.0:
 **Keep the map response, add the SPI method only.** Half-measure. The smell of returning `Map<String, String>` from a controller is independent of the SPI shape.
 
 **Return the entire `AuditEvent` of the head record.** Considered but the `AuditEvent` is heavy (~17 fields), most of them irrelevant to a "where is the head" query. The two fields callers actually use are the system id and the head HMAC.
+
+## Why this matters
+
+Returning `Map<String, String>` from a controller is the lazy default that ages badly. Once the endpoint has consumers, every additional field, every renamed key, every type change becomes a wire-format negotiation. A typed `record` future-proofs the surface: adding fields is forward-compatible (consumers ignore unknown keys), schema generators emit useful OpenAPI, and Java callers get compile-time guarantees. The `Map`-as-response shortcut is acceptable in a prototype, never in v1 of a library.
+
+## References
+
+- Refactor commit: `7ccf3ea` (PR #4, v1.1.0 release).
+- New API in `spring-aiact-core/src/main/java/.../audit/AuditLogService.java`: `head(String)` + `record ChainHead`.
+- Wire compatibility: `@JsonProperty("system_id")` and `@JsonProperty("head_hmac")` preserve snake_case JSON for the v1.0 → v1.1 transition.
