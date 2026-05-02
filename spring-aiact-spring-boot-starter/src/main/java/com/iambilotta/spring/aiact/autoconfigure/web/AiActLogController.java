@@ -5,7 +5,6 @@
 package com.iambilotta.spring.aiact.autoconfigure.web;
 
 import com.iambilotta.spring.aiact.audit.AuditLogService;
-import com.iambilotta.spring.aiact.audit.HmacChain;
 import com.iambilotta.spring.aiact.model.AuditEvent;
 import com.iambilotta.spring.aiact.security.AiActEndpointGuard;
 import org.springframework.http.HttpStatus;
@@ -24,8 +23,6 @@ import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Stream;
 
 /**
@@ -94,14 +91,8 @@ public class AiActLogController {
     }
 
     @GetMapping(value = "/head", produces = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, String> head(@RequestParam("system") String systemId) {
+    public AuditLogService.ChainHead head(@RequestParam("system") String systemId) {
         enforce(systemId, AiActEndpointGuard.Action.READ_HEAD);
-        AtomicReference<String> last = new AtomicReference<>(HmacChain.CHAIN_SEED);
-        try (Stream<AuditEvent> s = auditLog.stream(systemId, null, null)) {
-            s.forEach(e -> {
-                if (e.recordHmac() != null) last.set(e.recordHmac());
-            });
-        }
-        return Map.of("system_id", systemId, "head_hmac", last.get());
+        return auditLog.head(systemId);
     }
 }

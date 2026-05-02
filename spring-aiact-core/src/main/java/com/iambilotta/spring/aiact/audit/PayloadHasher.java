@@ -40,6 +40,24 @@ public final class PayloadHasher {
         }
     }
 
+    /**
+     * Serialise {@code value} into a stable string used as the SHA-256 input.
+     *
+     * <p>Determinism matters: two JVM runs on the same logical payload must produce the
+     * same hash, otherwise the {@code /aiact/log/verify} chain would flag false positives
+     * across restarts. Three branches:
+     *
+     * <ul>
+     *   <li>strings go through unchanged,</li>
+     *   <li>structured payloads use Jackson with the snake_case Article 12 mapper,</li>
+     *   <li>if Jackson refuses (cyclic reference, unsupported type, etc) we fall back to
+     *       a deterministic marker that records the type but never the in-memory address,
+     *       so the hash is reproducible across processes.</li>
+     * </ul>
+     *
+     * The previous implementation used {@code System.identityHashCode}, which changes
+     * between JVM runs and broke verifiability. Kept here as a regression note.
+     */
     private String serialize(Object value) {
         if (value instanceof CharSequence cs) {
             return cs.toString();
@@ -47,7 +65,7 @@ public final class PayloadHasher {
         try {
             return mapper.writeValueAsString(value);
         } catch (JsonProcessingException e) {
-            return value.getClass().getName() + "@" + System.identityHashCode(value);
+            return "unserializable:" + value.getClass().getName();
         }
     }
 
