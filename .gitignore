@@ -13,3 +13,6 @@ hs_err_pid*
 *.log
 build/
 out/
+
+# maven-shade-plugin artifacts
+**/dependency-reduced-pom.xml
