@@ -4,11 +4,13 @@
  */
 package com.iambilotta.spring.aiact.audit;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.iambilotta.spring.aiact.model.AuditEvent;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.time.Instant;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -52,6 +54,43 @@ public interface AuditLogService {
         throw new UnsupportedOperationException(
                 getClass().getName() + " does not support NDJSON streaming export");
     }
+
+    /**
+     * Return the current head of the HMAC chain for {@code systemId}: the
+     * {@code record_hmac} of the most recent record, or {@link HmacChain#CHAIN_SEED}
+     * if the system has never logged. Acts as a cheap tamper canary: an external
+     * verifier can poll this endpoint and notice if the head moves backward.
+     *
+     * <p>The default implementation walks the stream to the end; concrete sinks that
+     * can answer in O(1) (for example by keeping the last HMAC in memory) should
+     * override.
+     */
+    default ChainHead head(String systemId) {
+        String last = HmacChain.CHAIN_SEED;
+        try (Stream<AuditEvent> s = stream(systemId, null, null)) {
+            Iterator<AuditEvent> it = s.iterator();
+            while (it.hasNext()) {
+                AuditEvent e = it.next();
+                if (e.recordHmac() != null) {
+                    last = e.recordHmac();
+                }
+            }
+        }
+        return new ChainHead(systemId, last);
+    }
+
+    /**
+     * Current head of the HMAC chain for a system.
+     *
+     * <p>Wire format keeps {@code snake_case} keys to match the Article 12 NDJSON
+     * schema: a downstream verifier can compare the {@code head_hmac} field against
+     * the last {@code record_hmac} of an exported slice without translating naming
+     * conventions.
+     */
+    record ChainHead(
+            @JsonProperty("system_id") String systemId,
+            @JsonProperty("head_hmac") String headHmac
+    ) {}
 
     /**
      * Result of an HMAC chain verification run.

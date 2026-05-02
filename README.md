@@ -155,7 +155,7 @@ The trade-off: `spring-aiact` does not give you a dashboard or a sales-to-CISO c
 <dependency>
     <groupId>com.github.iambilotta.spring-aiact</groupId>
     <artifactId>spring-aiact-spring-boot-starter</artifactId>
-    <version>v1.0.0</version>
+    <version>v1.1.0</version>
 </dependency>
 ```
 
@@ -164,7 +164,7 @@ Gradle:
 ```kotlin
 repositories { maven { url = uri("https://jitpack.io") } }
 dependencies {
-    implementation("com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:v1.0.0")
+    implementation("com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:v1.1.0")
 }
 ```
 
@@ -207,7 +207,7 @@ aiact:
         <plugin>
             <groupId>com.github.iambilotta.spring-aiact</groupId>
             <artifactId>spring-aiact-maven-plugin</artifactId>
-            <version>v1.0.0</version>
+            <version>v1.1.0</version>
             <executions>
                 <execution>
                     <goals>
