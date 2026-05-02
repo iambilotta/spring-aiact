@@ -5,7 +5,6 @@
 package com.iambilotta.spring.aiact.autoconfigure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
@@ -14,13 +13,16 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Regression test for the bug where {@code aiActObjectMapper} satisfied
- * {@code @ConditionalOnMissingBean(ObjectMapper.class)} of {@code JacksonAutoConfiguration}
- * and replaced the application's primary ObjectMapper, breaking Spring MVC's HTTP message
- * conversion for any user app importing the starter.
+ * Pins the contract that the spring-aiact starter never exposes its internal,
+ * snake_case-configured ObjectMapper to the application's Spring context.
  *
- * <p>The aiact ObjectMapper is intentionally configured with SNAKE_CASE for deterministic
- * audit-record hashing. The application's ObjectMapper must stay independent of that choice.
+ * <p>History: in v0.1.x the starter registered an {@code aiActObjectMapper} bean of
+ * type {@link ObjectMapper}. That bean satisfied
+ * {@code @ConditionalOnMissingBean(ObjectMapper.class)} of {@code JacksonAutoConfiguration}
+ * and replaced Spring Boot's primary mapper, breaking Spring MVC HTTP message conversion.
+ * v1.0.0 removes the bean entirely and folds the audit-record mapper inside the consumers
+ * that need it. This test ensures the regression cannot come back: there is no
+ * {@code aiActObjectMapper} bean, and Spring Boot's primary mapper is intact.
  */
 class ObjectMapperIsolationTest {
 
@@ -45,12 +47,16 @@ class ObjectMapperIsolationTest {
     }
 
     @Test
-    void aiActObjectMapperIsStillReachableByQualifier() {
+    void aiActDoesNotPublishAnInternalObjectMapperBean() {
         runner.run(ctx -> {
-            ObjectMapper aiActMapper = (ObjectMapper) ctx.getBean("aiActObjectMapper");
-            assertThat(aiActMapper.getPropertyNamingStrategy())
-                    .as("the aiact-internal mapper must remain SNAKE_CASE for deterministic hashing")
-                    .isInstanceOf(PropertyNamingStrategies.SnakeCaseStrategy.class);
+            assertThat(ctx)
+                    .as("the aiact internal ObjectMapper is an implementation detail "
+                        + "and must not appear as a bean in the Spring context")
+                    .doesNotHaveBean("aiActObjectMapper");
+            String[] mapperBeans = ctx.getBeanNamesForType(ObjectMapper.class);
+            assertThat(mapperBeans)
+                    .as("only Spring Boot's mapper should be in the context")
+                    .hasSize(1);
         });
     }
 }

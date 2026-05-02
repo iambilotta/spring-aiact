@@ -6,17 +6,28 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+### Changed (BREAKING for users who relied on `@Qualifier("aiActObjectMapper")`)
+- The internal `ObjectMapper` used to serialise Article 12 audit records is no longer
+  exposed as a Spring bean. It is now built inside `AiActAutoConfiguration` and passed
+  directly to the components that need it (`PayloadHasher`, `NdjsonAuditLogService`).
+  Migration: applications that overrode hashing or NDJSON serialisation by registering
+  their own `aiActObjectMapper` bean must now provide a `PayloadHasher` and/or an
+  `AuditLogService` bean instead. The bean was undocumented as an extension point in
+  v0.1.x, so most users will not be affected. `AiActLogController` no longer takes an
+  `ObjectMapper`; it streams Article 12 exports through the new
+  `AuditLogService.writeJsonLine(Writer, AuditEvent)` default method, which the
+  NDJSON implementation overrides.
+- This refactor closes [#2](https://github.com/iambilotta/spring-aiact/issues/2),
+  the follow-up to the v0.1.1+ minimal fix that used `defaultCandidate=false`.
+
 ### Fixed
-- `aiActObjectMapper` no longer shadows the application's primary `ObjectMapper`. The
-  bean is now declared with `defaultCandidate=false`, so it is invisible to Spring's
-  by-type autowiring and to `@ConditionalOnMissingBean(ObjectMapper.class)` in
-  `JacksonAutoConfiguration`. The application's own `ObjectMapper` (the one Spring MVC
-  uses for HTTP message conversion) keeps whatever Spring Boot configured, including
-  property-naming strategy. Internal consumers reach the aiact mapper via
-  `@Qualifier("aiActObjectMapper")`. Symptom before the fix: any user POST with
-  camelCase JSON returned `400 Unrecognized field` because aiact's `SNAKE_CASE` mapper
-  had taken over Spring MVC's deserialisation. Regression test added in
-  `ObjectMapperIsolationTest`.
+- `aiActObjectMapper` no longer shadows the application's primary `ObjectMapper`.
+  Symptom before the v0.1.1 patch (PR #1) and now closed at the architectural level by
+  this refactor: any user POST with camelCase JSON returned `400 Unrecognized field`
+  because aiact's `SNAKE_CASE` mapper had taken over Spring MVC's deserialisation.
+  Regression pinned by `ObjectMapperIsolationTest` (no `aiActObjectMapper` bean,
+  exactly one `ObjectMapper` in the context, and that one is Spring Boot's primary).
+  Hash determinism pinned by `PayloadHasherDeterminismTest`.
 
 ## [0.1.1] - 2026-05-01
 
