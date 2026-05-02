@@ -21,7 +21,6 @@ import com.iambilotta.spring.aiact.codegen.markdown.TechnicalFileMarkdownRendere
 import com.iambilotta.spring.aiact.codegen.pdf.DeclarationOfConformityPdfGenerator;
 import com.iambilotta.spring.aiact.oversight.OversightService;
 import com.iambilotta.spring.aiact.retention.RetentionPolicyService;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -40,19 +39,18 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class AiActAutoConfiguration {
 
     /**
-     * Internal ObjectMapper used to serialise audit records and to read NDJSON slices.
+     * Build the ObjectMapper used internally by {@link PayloadHasher} and
+     * {@link NdjsonAuditLogService} to serialise audit records.
      *
-     * <p>Marked {@code defaultCandidate=false} so it is invisible to Spring's by-type
-     * autowiring and to the {@code @ConditionalOnMissingBean(ObjectMapper.class)} guard in
-     * {@code JacksonAutoConfiguration}. The application's own ObjectMapper, the one Spring
-     * MVC uses for HTTP message conversion, stays whatever Spring Boot configures, including
-     * its property-naming strategy.
-     *
-     * <p>This bean is reachable only via {@link Qualifier @Qualifier("aiActObjectMapper")}.
+     * <p>Configured with snake_case property naming and ISO-8601 instants because the
+     * Article 12 NDJSON schema and the SHA-256 input hash both depend on a stable JSON
+     * shape. This is an implementation detail: it is intentionally <strong>not</strong>
+     * exposed as a Spring bean, so it cannot interfere with the application's own
+     * {@code ObjectMapper} (the one Spring MVC uses for HTTP message conversion) or with
+     * the {@code @ConditionalOnMissingBean(ObjectMapper.class)} guard in
+     * {@code JacksonAutoConfiguration}.
      */
-    @Bean(defaultCandidate = false)
-    @ConditionalOnMissingBean(name = "aiActObjectMapper")
-    ObjectMapper aiActObjectMapper() {
+    private static ObjectMapper buildAuditEventMapper() {
         return new ObjectMapper()
                 .registerModule(new JavaTimeModule())
                 .setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE)
@@ -97,8 +95,8 @@ public class AiActAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    PayloadHasher aiActPayloadHasher(@Qualifier("aiActObjectMapper") ObjectMapper mapper) {
-        return new PayloadHasher(mapper);
+    PayloadHasher aiActPayloadHasher() {
+        return new PayloadHasher(buildAuditEventMapper());
     }
 
     @Bean
@@ -109,11 +107,9 @@ public class AiActAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    AuditLogService aiActAuditLogService(AiActConfigProperties props,
-                                          HmacChain hmac,
-                                          @Qualifier("aiActObjectMapper") ObjectMapper mapper) {
+    AuditLogService aiActAuditLogService(AiActConfigProperties props, HmacChain hmac) {
         return new NdjsonAuditLogService(
-                props.getLogDir(), hmac, mapper, props.getAudit().isSingleWriterLock());
+                props.getLogDir(), hmac, buildAuditEventMapper(), props.getAudit().isSingleWriterLock());
     }
 
     @Bean

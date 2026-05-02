@@ -4,12 +4,10 @@
  */
 package com.iambilotta.spring.aiact.autoconfigure.web;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iambilotta.spring.aiact.audit.AuditLogService;
 import com.iambilotta.spring.aiact.audit.HmacChain;
 import com.iambilotta.spring.aiact.model.AuditEvent;
 import com.iambilotta.spring.aiact.security.AiActEndpointGuard;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -44,14 +42,10 @@ import java.util.stream.Stream;
 public class AiActLogController {
 
     private final AuditLogService auditLog;
-    private final ObjectMapper mapper;
     private final AiActEndpointGuard guard;
 
-    public AiActLogController(AuditLogService auditLog,
-                              @Qualifier("aiActObjectMapper") ObjectMapper mapper,
-                              AiActEndpointGuard guard) {
+    public AiActLogController(AuditLogService auditLog, AiActEndpointGuard guard) {
         this.auditLog = auditLog;
-        this.mapper = mapper;
         this.guard = guard;
     }
 
@@ -84,8 +78,7 @@ public class AiActLogController {
 
     private void writeJsonLine(Writer w, AuditEvent event) {
         try {
-            w.write(mapper.writeValueAsString(event));
-            w.write('\n');
+            auditLog.writeJsonLine(w, event);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
