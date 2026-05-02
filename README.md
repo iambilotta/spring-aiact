@@ -155,7 +155,7 @@ The trade-off: `spring-aiact` does not give you a dashboard or a sales-to-CISO c
 <dependency>
     <groupId>com.github.iambilotta.spring-aiact</groupId>
     <artifactId>spring-aiact-spring-boot-starter</artifactId>
-    <version>v0.1.1</version>
+    <version>v1.0.0</version>
 </dependency>
 ```
 
@@ -164,7 +164,7 @@ Gradle:
 ```kotlin
 repositories { maven { url = uri("https://jitpack.io") } }
 dependencies {
-    implementation("com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:v0.1.1")
+    implementation("com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:v1.0.0")
 }
 ```
 
@@ -207,7 +207,7 @@ aiact:
         <plugin>
             <groupId>com.github.iambilotta.spring-aiact</groupId>
             <artifactId>spring-aiact-maven-plugin</artifactId>
-            <version>v0.1.1</version>
+            <version>v1.0.0</version>
             <executions>
                 <execution>
                     <goals>
@@ -269,7 +269,7 @@ aiact:
 
 The starter does not depend on Spring Security; OPA, API key checks, mTLS subject mappings, or any other auth source plug into the same SPI. OPA + multi-tenant examples in [`docs/PRODUCTION.md`](docs/PRODUCTION.md).
 
-## Articles covered (v0.1)
+## Articles covered (v1.0)
 
 | Article | What spring-aiact does |
 |---|---|
@@ -300,7 +300,7 @@ Every call passes through the configured `AiActEndpointGuard`. The default deny-
 
 **Retention prunes the chain seed.** When `RetentionPolicyService` removes records older than the configured horizon, the kept slice carries its original `prev_hmac` (the HMAC of the now-deleted predecessor). A verifier walking from `CHAIN_SEED` will see one mismatch on that boundary record. Documented in `RetentionPolicyServiceTest`. Export before prune if you need pre-cutoff verifiability.
 
-**Encryption at rest is a v1.0 placeholder.** `AiActProperties.Encryption` is reserved for the future implementation and currently does nothing. Until v1.0 lands, rely on filesystem encryption (LUKS, EFS-at-rest, EBS-encrypted). Do not interpret `aiact.encryption.enabled=true` as live encryption.
+**Encryption at rest is a placeholder, planned for a future minor.** `AiActProperties.Encryption` is reserved for the implementation and currently does nothing. Until that lands, rely on filesystem encryption (LUKS, EFS-at-rest, EBS-encrypted). Do not interpret `aiact.encryption.enabled=true` as live encryption.
 
 **HMAC secret default in production.** The starter refuses to boot if `aiact.hmac.secret` is the placeholder `change-me-please` and no development profile is active. Set `aiact.hmac.fail-on-default-in-prod=false` only as an emergency hotfix.
 
@@ -310,13 +310,13 @@ Every call passes through the configured `AiActEndpointGuard`. The default deny-
 
 **Does it work without Spring Security?** Yes. The auth surface is one SPI (`AiActEndpointGuard`); plug in OPA, API keys, mTLS subjects, anything. A Spring Security example is in `docs/PRODUCTION.md`.
 
-**Can I store the audit log in Postgres / S3?** Not in v0.1. `AuditLogService` is an interface; a JDBC sink lands in v1.0 as a separate optional module. Until then, register your own implementation if you must.
+**Can I store the audit log in Postgres / S3?** Not in v1.0. `AuditLogService` is an interface; a JDBC sink is planned as a separate optional module in a future minor. Until then, register your own implementation if you must.
 
 **My system is not in Annex III. Should I still use this?** No. The starter is for high-risk systems. If your system is general-purpose AI under Article 51 or limited-risk under Article 50, you have different obligations and this is not the right tool.
 
 **Will my audit log work after a HMAC key rotation?** No, by design. Rotation is documented in `docs/PRODUCTION.md` as a controlled procedure (export old chain, archive, re-seed). An attacker who steals the key loses access to forge new records but the old chain remains verifiable with the old key, which is what an auditor will ask for.
 
-**Does it support Spring Boot 2.x?** No. v0.1 targets Spring Boot 3.5+ and Java 21+.
+**Does it support Spring Boot 2.x?** No. v1.0 targets Spring Boot 3.5+ and Java 21+.
 
 ## Out of scope
 
@@ -327,9 +327,8 @@ Every call passes through the configured `AiActEndpointGuard`. The default deny-
 
 ## Roadmap
 
-- **v0.1, shipping:** the surface above. Apache 2.0, distributed via JitPack. Single SPI for auth (`AiActEndpointGuard`), file-locked audit log, deny-by-default endpoints, fail-fast on the default HMAC secret in production, configuration metadata, actuator health indicator.
-- **v0.5:** CI templates (GitHub Actions, GitLab, Jenkins) wrapping `verify`. One contribution upstream to Spring AI / `mcp-security`. Maven Central namespace `com.iambilotta.spring` published in addition to JitPack.
-- **v1.0:** live encryption-at-rest (`AiActProperties.Encryption`), JDBC-backed audit sink as a separate optional module, multi-tenant isolation patterns documented, Spring Security autoconfiguration adapter as an opt-in extra module.
+- **v1.0 (current, May 2026):** API freeze. Apache 2.0, JitPack distribution, single SPI for auth (`AiActEndpointGuard`), file-locked NDJSON audit log with HMAC chain, deny-by-default endpoints, fail-fast on the default HMAC secret in production, configuration metadata, actuator health indicator. Internal `ObjectMapper` is no longer a Spring bean (no shadowing of the application's primary mapper).
+- **Planned for a future minor:** CI templates (GitHub Actions, GitLab, Jenkins) wrapping `verify`. JDBC-backed audit sink as a separate optional module. Multi-tenant isolation patterns documented. Spring Security autoconfiguration adapter as an opt-in extra module. Live encryption-at-rest (`AiActProperties.Encryption`). Maven Central namespace `com.iambilotta.spring` published in addition to JitPack.
 
 ## About
 
