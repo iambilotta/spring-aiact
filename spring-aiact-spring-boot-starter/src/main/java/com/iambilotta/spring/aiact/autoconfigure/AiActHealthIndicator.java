@@ -5,8 +5,8 @@
 package com.iambilotta.spring.aiact.autoconfigure;
 
 import com.iambilotta.spring.aiact.config.AiActProperties;
-import org.springframework.boot.actuate.health.Health;
-import org.springframework.boot.actuate.health.HealthIndicator;
+import org.springframework.boot.health.contributor.Health;
+import org.springframework.boot.health.contributor.HealthIndicator;
 
 import java.io.IOException;
 import java.nio.file.Files;

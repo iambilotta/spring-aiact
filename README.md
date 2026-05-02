@@ -18,7 +18,7 @@ Does:    Generates Annex IV technical file + Article 47 DoC at build,
 Effort:  ~15 min first run on a fresh service, ~1h production-ready
          (HMAC secret in vault, AiActEndpointGuard wired, single-writer-lock)
 Cost:    Apache 2.0, no SaaS, no data egress
-Status:  v1.1.0 stable, distributed via JitPack
+Status:  v2.x active line (Spring Boot 4+), v1.x LTS line (Spring Boot 3.5+) frozen at v1.1.0. JitPack distribution.
 Deadline: AI Act high-risk obligations enforce on 2 August 2026
 ```
 
@@ -192,7 +192,14 @@ Tamper one byte of any record on disk, every subsequent record fails verify beca
 
 ## Quick start
 
-Distributed via [JitPack](https://jitpack.io/#iambilotta/spring-aiact). **Maven Central is deliberately not planned**: this repo is a reference / portfolio asset of the maintainer, not a commercially supported product, and Maven Central imposes permanent release-pipeline maintenance (immutable releases, GPG key custody, Sonatype workflows) that is only worth carrying once a real adopter requires it. See [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md) for the full rationale.
+Distributed via [JitPack](https://jitpack.io/#iambilotta/spring-aiact). **Maven Central is deliberately not planned**: this repo is a reference / portfolio asset of the maintainer, not a commercially supported product. See [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md) for the full rationale.
+
+> **Dual release line.** Pin the version that matches your Spring Boot.
+>
+> | Your stack | Pin |
+> |---|---|
+> | Spring Boot 3.5+ | `v1.1.0` (LTS line, frozen, no active maintenance) |
+> | Spring Boot 4.0+ | `v2.0.0` (active line) |
 
 ### 1. Add the starter
 
@@ -204,7 +211,7 @@ Distributed via [JitPack](https://jitpack.io/#iambilotta/spring-aiact). **Maven 
 <dependency>
     <groupId>com.github.iambilotta.spring-aiact</groupId>
     <artifactId>spring-aiact-spring-boot-starter</artifactId>
-    <version>v1.1.0</version>
+    <version>v2.0.0</version>
 </dependency>
 ```
 
@@ -241,7 +248,7 @@ aiact:
 <plugin>
     <groupId>com.github.iambilotta.spring-aiact</groupId>
     <artifactId>spring-aiact-maven-plugin</artifactId>
-    <version>v1.1.0</version>
+    <version>v2.0.0</version>
     <executions><execution><goals>
         <goal>verify</goal>
         <goal>generate</goal>
