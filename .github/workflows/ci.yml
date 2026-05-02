@@ -36,7 +36,7 @@ jobs:
 
       - name: Upload generated docs (sample)
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: generated-docs-jdk${{ matrix.java }}
           path: spring-aiact-sample/target/generated-docs/
@@ -44,7 +44,7 @@ jobs:
 
       - name: Upload coverage report (jacoco aggregate)
         if: always() && matrix.java == '21'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage-jacoco-aggregate
           path: spring-aiact-sample/target/site/jacoco-aggregate/
