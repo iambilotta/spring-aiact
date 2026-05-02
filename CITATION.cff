@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you reference this library in a paper, blog post, or talk, please cite it like so."
+title: "spring-aiact: EU AI Act compliance, generated from your annotations"
+abstract: >
+  A Spring Boot starter and Maven plugin that turn @AiAct* annotations on a high-risk
+  AI system into the evidence pack required by the EU AI Act: a tamper-evident NDJSON
+  audit log with an HMAC chain (Article 12), a Markdown technical file (Article 11 +
+  Annex IV), an Article 47 Declaration of Conformity PDF, and per-dataset datasheets
+  (Article 10). Apache 2.0, no SaaS, no data egress.
+type: software
+version: "1.1.0"
+date-released: 2026-05-02
+license: Apache-2.0
+repository-code: "https://github.com/iambilotta/spring-aiact"
+url: "https://github.com/iambilotta/spring-aiact"
+keywords:
+  - eu-ai-act
+  - compliance
+  - audit-log
+  - hmac
+  - spring-boot
+  - annotation-driven
+  - evidence-as-code
+authors:
+  - given-names: Francesco
+    family-names: Bilotta
+    email: francesco@iambilotta.com
+    website: "https://iambilotta.com"
