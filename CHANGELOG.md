@@ -8,6 +8,33 @@ All notable changes to this project are documented here. Format follows
 
 _No changes yet._
 
+## [1.1.0] - 2026-05-02
+
+API cleanup release. No new features. Sharpens the surface that 1.0.0 froze
+where a senior code review surfaced smells worth fixing before the first
+external adopter.
+
+### Fixed
+- **`PayloadHasher` no longer falls back to `System.identityHashCode`** when
+  Jackson refuses a payload. The previous fallback was non-deterministic across
+  JVM runs, which silently broke chain verification for any record whose input
+  serialisation happened to throw. The new fallback is the deterministic marker
+  `unserializable:<fully-qualified-type-name>`. Hashes for routine payloads are
+  unchanged.
+
+### Changed (BREAKING wire format on /aiact/log/head response field names, but the snake_case form is preserved)
+- **`GET /aiact/log/head`** now returns the typed
+  `AuditLogService.ChainHead(systemId, headHmac)` record instead of a raw
+  `Map<String, String>`. JSON output keys remain `system_id` and `head_hmac`
+  via `@JsonProperty`, so existing clients that parsed the JSON by field name
+  continue to work. Java callers that consumed the controller method as
+  `Map<String, String>` must switch to `ChainHead`. The endpoint also now
+  routes through the new `AuditLogService.head(String)` API instead of doing
+  a `Stream` walk with an `AtomicReference` inside the controller.
+- New API: `AuditLogService.head(String systemId)` returning `ChainHead`.
+  Default implementation walks the stream; concrete sinks that can answer in
+  O(1) should override.
+
 ## [1.0.0] - 2026-05-02
 
 First stable release. API freeze for `@AiAct*` annotations, `AuditLogService`, `AiActEndpointGuard`, `aiact.*` configuration properties and the `/aiact/**` REST shape. Breaking changes from here on out follow semantic versioning.
