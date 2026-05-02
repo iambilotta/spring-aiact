@@ -6,11 +6,55 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
-### Changed
-- Bumped `com.github.librepdf:openpdf` 2.0.3 → 3.0.4 ([closes #22](https://github.com/iambilotta/spring-aiact/issues/22)). Package rename migration: every `com.lowagie.text.*` import in `DeclarationOfConformityPdfGenerator` was rewritten to `org.openpdf.text.*`. The generated DoC PDF now declares `%PDF-2.0` instead of `%PDF-1.4`, with no functional change visible to a human reader; signature placeholder coordinates and font metrics are unchanged.
+_No changes yet._
+
+## [2.0.0] - 2026-05-02
+
+First release of the **Spring Boot 4 line**. The library splits into two parallel
+release lines from this point onward (closes
+[#21](https://github.com/iambilotta/spring-aiact/issues/21)):
+
+- **v1.x** — Spring Boot 3.5+ LTS line, frozen at v1.1.x. No new features; bug
+  fixes welcome via PR but no active maintenance commitment.
+- **v2.x** — Spring Boot 4.0+ active line. All future development happens here.
+
+Includes the openpdf 3.x bump
+([closes #22](https://github.com/iambilotta/spring-aiact/issues/22)) folded into
+the v2 release rather than shipping as a v1.2 dot release.
+
+### Changed (BREAKING for adopters)
+- **Minimum Spring Boot version is now 4.0+.** Adopters on Spring Boot 3.5 must
+  pin to v1.1.x; do not upgrade to v2.0.0.
+- **Imports re-homed for Spring Boot 4 module split:**
+  - `org.springframework.boot.actuate.health.{Health,HealthIndicator}` →
+    `org.springframework.boot.health.contributor.{Health,HealthIndicator}`
+  - `org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration` →
+    `org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration`
+  - `org.springframework.boot.test.web.client.TestRestTemplate` →
+    `org.springframework.boot.resttestclient.TestRestTemplate`
+- **Dependency rename:** `spring-boot-starter-aop` →
+  `spring-boot-starter-aspectj`.
+- **`com.github.librepdf:openpdf` 2.0.3 → 3.0.4** (package rename
+  `com.lowagie.text.*` → `org.openpdf.text.*` across
+  `DeclarationOfConformityPdfGenerator`). The generated DoC PDF now declares
+  `%PDF-2.0` instead of `%PDF-1.4`, no human-visible layout change.
+
+### Internal
+- `ObjectMapperIsolationTest` simplified to assert "the starter publishes zero
+  Jackson 2 ObjectMapper beans". The shadowing failure mode of v0.1.x is
+  structurally impossible in Spring Boot 4 because SB 4 ships Jackson 3
+  (`tools.jackson.*`) and does not register a Jackson 2 `ObjectMapper` bean.
+  Test classpath: `spring-boot-jackson` declared explicitly.
+- Sample app test classpath: `spring-boot-resttestclient` and
+  `spring-boot-restclient` declared explicitly because the auto-configured
+  `TestRestTemplate` plus its `RestTemplateBuilder` dependency live in
+  separate jars under SB 4. Two test classes annotated
+  `@AutoConfigureTestRestTemplate`.
 
 ### Docs
-- Distribution policy revised: Maven Central is **not planned** for this repo. Updated [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md) status from "deferred" to "not planned by design", with the framing that this is a reference / portfolio asset, not a commercial product, and the permanent maintenance cost of a Maven Central pipeline is not justified absent an adopter requiring it. README "Quick start" and "Roadmap" sections updated to make the position explicit upfront.
+- README "Status" line updated to "v1.x = SB 3.5 LTS line, v2.x = SB 4 active
+  line".
+- ADR-0005 already framed JitPack-only; no change needed.
 
 ## [1.1.0] - 2026-05-02
 

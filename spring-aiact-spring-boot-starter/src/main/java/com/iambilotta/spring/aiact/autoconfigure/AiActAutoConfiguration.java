@@ -185,7 +185,7 @@ public class AiActAutoConfiguration {
      */
     @Configuration(proxyBeanMethods = false)
     @org.springframework.boot.autoconfigure.condition.ConditionalOnClass(
-            org.springframework.boot.actuate.health.HealthIndicator.class)
+            org.springframework.boot.health.contributor.HealthIndicator.class)
     static class HealthIndicatorAutoConfig {
         @Bean
         @ConditionalOnMissingBean(name = "aiActHealthIndicator")
