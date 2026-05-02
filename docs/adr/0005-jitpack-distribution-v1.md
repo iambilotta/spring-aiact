@@ -1,7 +1,7 @@
-# ADR-0005: JitPack as the canonical distribution for v1.x; Maven Central deferred
+# ADR-0005: JitPack as the canonical distribution; Maven Central not planned
 
-- **Status:** accepted
-- **Date:** 2026-04-30
+- **Status:** accepted (revised 2026-05-02 from "deferred" to "not planned by design")
+- **Date:** 2026-04-30 (initial), 2026-05-02 (revision)
 - **Deciders:** Francesco Bilotta
 
 ## Context
@@ -16,7 +16,7 @@ The library is in v1.x with the goal of being adoptable but the maintainer's ban
 
 ## Decision
 
-JitPack ships in five minutes; Sonatype namespace verification takes 5-15 days wall-clock. v1.0 was tagged within a one-day shipping window and JitPack was the realistic option. v1.1 stays on JitPack because nothing has forced our hand to migrate yet.
+JitPack ships in five minutes; Sonatype namespace verification takes 5-15 days wall-clock plus permanent ongoing maintenance. v1.0 was tagged within a one-day shipping window and JitPack was the realistic option. After the v1.x deep-investment cycle (v1.0 → v1.1 + ADRs + JMH harness + threat model + demo) the maintainer revised the position: **Maven Central is not planned for this repo**. This is a reference / portfolio asset of the maintainer, not a commercially supported product, and the cost of a Maven Central pipeline (immutable releases, GPG key custody, Sonatype workflow) is permanent. JitPack covers the consumer use case at zero ongoing cost.
 
 Coordinates published in the README:
 
@@ -24,7 +24,7 @@ Coordinates published in the README:
 com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:v1.1.0
 ```
 
-Maven Central publication is queued behind a Sonatype namespace request for `com.iambilotta.spring`; once the namespace is verified, the library publishes signed artifacts from a tag-driven `release.yml` workflow. JitPack will keep mirroring git tags for the v1.x series; v2.0 will publish to Maven Central first and JitPack second.
+If a real adopter ever explicitly requires Maven Central (corporate policy blocking JitPack as a third party, security review constraint), the migration path is documented and the `release.yml` scaffolding is already wired. Until that trigger, the maintainer does not pay the maintenance tax.
 
 ## Consequences
 
@@ -35,18 +35,22 @@ Maven Central publication is queued behind a Sonatype namespace request for `com
 
 ## Alternatives considered
 
-**Maven Central from v1.0.** Rejected for v1: the namespace verification window is 5-15 days wall-clock and the maintainer's bandwidth was on shipping the API surface. Deferred to a future minor without breaking changes.
+**Maven Central from v1.0.** Rejected for v1.0 because of the verification window. After v1.1 the position hardened: Maven Central is not planned at all. Reasons in "Why this matters" below.
+
+**Maven Central as a future planned milestone.** Considered through v0.5 / v1.0 thinking. Revised: the maintenance tax is permanent and the marginal benefit over JitPack is incremental. The repo is a reference asset, not a commercial product, and the trigger for a Maven Central migration is "real adopter requirement", not "looks more professional".
 
 **GitHub Packages.** Rejected: adopter token requirement is friction.
 
-**Self-hosted Nexus.** Over-engineering for a single-maintainer project at this stage.
+**Self-hosted Nexus.** Over-engineering for a single-maintainer reference repo.
 
 ## Why this matters
 
-We are constantly tempted to pre-optimise for "production-grade signal" before any adopter has shown interest. JitPack is the right call until a real adopter asks for Maven Central. Spending two weeks on Sonatype before the first user values discipline only on paper. The honest version of this ADR is "shipped now, will revisit when the demand exists".
+This repo is the maintainer's **portfolio asset**, not a commercial product. The honest framing: "I built this to demonstrate evidence-as-code patterns for AI Act compliance and to use as my own technical authority signal in conversations; if it ends up adopted by another team that is a bonus, not the primary goal." JitPack covers the consumer use case at zero ongoing cost. Maven Central imposes a permanent maintenance tax (immutable releases mean every typo is forever, GPG key rotation is painful, Sonatype security workflows demand attention). For a non-commercial reference repo, the math does not work until someone explicitly says they cannot consume from JitPack.
+
+The principle generalises: **do not pay infrastructure-grade maintenance costs for an asset that does not have infrastructure-grade adoption demand**. JitPack at zero maintenance, Maven Central if and when an adopter asks.
 
 ## References
 
 - The first JitPack release tag is `v0.1.1` (commit `b26cee2`). v0.1.0 build had failed on JitPack because of an outdated Maven version on JitPack's sandbox; the fix was the Maven Wrapper (commit `533f7a7`).
-- Maven Central scaffolding (release.yml workflow, Sonatype Central plugin in pluginManagement) is already wired and waiting. See the `release` profile in `pom.xml`.
-- This ADR will be revisited when a v1.x adopter explicitly asks for Maven Central.
+- Maven Central scaffolding (release.yml workflow, Sonatype Central plugin in pluginManagement) is already wired and waiting. The activation cost is real (GPG key generation, Sonatype namespace verification, four GitHub Secrets) and intentionally not paid.
+- Trigger for revisiting: a real adopter explicitly states "we cannot consume from JitPack". Until then, the decision stands.

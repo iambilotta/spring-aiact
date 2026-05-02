@@ -6,7 +6,8 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
-_No changes yet._
+### Docs
+- Distribution policy revised: Maven Central is **not planned** for this repo. Updated [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md) status from "deferred" to "not planned by design", with the framing that this is a reference / portfolio asset, not a commercial product, and the permanent maintenance cost of a Maven Central pipeline is not justified absent an adopter requiring it. README "Quick start" and "Roadmap" sections updated to make the position explicit upfront.
 
 ## [1.1.0] - 2026-05-02
 

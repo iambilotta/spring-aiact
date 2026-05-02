@@ -192,7 +192,7 @@ Tamper one byte of any record on disk, every subsequent record fails verify beca
 
 ## Quick start
 
-Distributed via [JitPack](https://jitpack.io/#iambilotta/spring-aiact). See [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md) for why not Maven Central yet.
+Distributed via [JitPack](https://jitpack.io/#iambilotta/spring-aiact). **Maven Central is deliberately not planned**: this repo is a reference / portfolio asset of the maintainer, not a commercially supported product, and Maven Central imposes permanent release-pipeline maintenance (immutable releases, GPG key custody, Sonatype workflows) that is only worth carrying once a real adopter requires it. See [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md) for the full rationale.
 
 ### 1. Add the starter
 
@@ -355,7 +355,7 @@ The full decision rationale lives under [`docs/adr/`](docs/adr/). Highlights:
 - [ADR-0002](docs/adr/0002-ndjson-hmac-chain-vs-database.md): NDJSON + HMAC chain as default Article 12 sink.
 - [ADR-0003](docs/adr/0003-spring-aop-advisor.md): Spring AOP advisor on `@AiActLog` (vs AspectJ LTW / Java agent).
 - [ADR-0004](docs/adr/0004-hmac-vs-digital-signature.md): HMAC chain instead of per-record digital signatures.
-- [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md): JitPack v1.x; Maven Central deferred.
+- [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md): JitPack as the v1.x distribution; Maven Central deliberately not planned (reference repo, no permanent release-pipeline maintenance).
 - [ADR-0006](docs/adr/0006-internal-objectmapper-not-a-bean.md): audit-record `ObjectMapper` as implementation detail, not a Spring bean.
 - [ADR-0007](docs/adr/0007-typed-chain-head-record.md): typed `ChainHead` record on `/aiact/log/head`.
 - [ADR-0008](docs/adr/0008-encryption-at-rest-deferred.md) [proposed]: live encryption-at-rest deferred to v1.2.x; filesystem encryption is the v1.x answer ([design study](docs/ENCRYPTION.md)).
@@ -387,7 +387,7 @@ Threat model + STRIDE table: [SECURITY.md](SECURITY.md#threat-model-1-page-summa
 - **v1.1 (current, May 2026):** API freeze. Apache 2.0, JitPack distribution, single SPI for auth (`AiActEndpointGuard`), file-locked NDJSON audit log with HMAC chain, deny-by-default endpoints, fail-fast on the default HMAC secret in production, configuration metadata, actuator health indicator, internal `ObjectMapper` no longer a Spring bean.
 - **Future minor:** CI templates (GitHub Actions, GitLab, Jenkins) wrapping `verify`. JDBC-backed audit sink as an optional module. Multi-tenant isolation patterns documented. Spring Security autoconfiguration adapter as an opt-in extra module.
 - **v1.2.x candidate:** live encryption-at-rest ([ADR-0008](docs/adr/0008-encryption-at-rest-deferred.md), [docs/ENCRYPTION.md](docs/ENCRYPTION.md)).
-- **Ongoing:** Maven Central namespace `com.iambilotta.spring` published in addition to JitPack.
+**On distribution:** Maven Central is **not** on the roadmap and is unlikely to be added unless a real adopter explicitly requires it. This repo is a reference / portfolio asset; the cost of maintaining a Maven Central release pipeline (GPG key custody, immutable releases, Sonatype workflow) is permanent and only worth paying when there is a concrete adopter demand. JitPack covers the consumer use case at zero ongoing maintenance cost. See [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md).
 
 ## About
 
