@@ -6,6 +6,14 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
+_No changes yet._
+
+## [1.0.0] - 2026-05-02
+
+First stable release. API freeze for `@AiAct*` annotations, `AuditLogService`, `AiActEndpointGuard`, `aiact.*` configuration properties and the `/aiact/**` REST shape. Breaking changes from here on out follow semantic versioning.
+
+JitPack coordinates: `com.github.iambilotta.spring-aiact:spring-aiact-spring-boot-starter:v1.0.0`.
+
 ### Changed (BREAKING for users who relied on `@Qualifier("aiActObjectMapper")`)
 - The internal `ObjectMapper` used to serialise Article 12 audit records is no longer
   exposed as a Spring bean. It is now built inside `AiActAutoConfiguration` and passed

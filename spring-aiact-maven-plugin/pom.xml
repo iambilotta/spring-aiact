@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.iambilotta.spring</groupId>
         <artifactId>spring-aiact-parent</artifactId>
-        <version>0.1.1</version>
+        <version>1.0.0</version>
     </parent>
 
     <artifactId>spring-aiact-maven-plugin</artifactId>
