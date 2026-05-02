@@ -43,6 +43,7 @@
         <module>spring-aiact-spring-boot-starter</module>
         <module>spring-aiact-maven-plugin</module>
         <module>spring-aiact-sample</module>
+        <module>spring-aiact-benchmark</module>
     </modules>
 
     <properties>
