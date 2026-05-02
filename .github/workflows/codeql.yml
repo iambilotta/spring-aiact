@@ -36,8 +36,8 @@ jobs:
           languages: java-kotlin
           queries: security-extended,security-and-quality
 
-      - name: Build with Maven (no tests, no plugin executions)
-        run: mvn -B -ntp -DskipTests -Dmaven.javadoc.skip=true compile
+      - name: Build with Maven (no tests, exclude sample to skip plugin descriptor binding)
+        run: mvn -B -ntp -DskipTests -Dmaven.javadoc.skip=true -pl '!spring-aiact-sample' compile
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3
