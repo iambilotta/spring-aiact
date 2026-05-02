@@ -6,7 +6,17 @@ All notable changes to this project are documented here. Format follows
 
 ## [Unreleased]
 
-_No changes yet._
+### Fixed
+- `aiActObjectMapper` no longer shadows the application's primary `ObjectMapper`. The
+  bean is now declared with `defaultCandidate=false`, so it is invisible to Spring's
+  by-type autowiring and to `@ConditionalOnMissingBean(ObjectMapper.class)` in
+  `JacksonAutoConfiguration`. The application's own `ObjectMapper` (the one Spring MVC
+  uses for HTTP message conversion) keeps whatever Spring Boot configured, including
+  property-naming strategy. Internal consumers reach the aiact mapper via
+  `@Qualifier("aiActObjectMapper")`. Symptom before the fix: any user POST with
+  camelCase JSON returned `400 Unrecognized field` because aiact's `SNAKE_CASE` mapper
+  had taken over Spring MVC's deserialisation. Regression test added in
+  `ObjectMapperIsolationTest`.
 
 ## [0.1.1] - 2026-05-01
 
