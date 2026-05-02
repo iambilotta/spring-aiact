@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
@@ -226,6 +227,12 @@ public class NdjsonAuditLogService implements AuditLogService {
     public Path fileFor(String systemId) {
         String safe = systemId.replaceAll("[^A-Za-z0-9._-]", "_");
         return rootDir.resolve(safe + ".ndjson");
+    }
+
+    @Override
+    public void writeJsonLine(Writer w, AuditEvent event) throws IOException {
+        w.write(serialize(event));
+        w.write('\n');
     }
 
     private String serialize(AuditEvent event) {
