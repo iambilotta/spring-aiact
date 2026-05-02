@@ -9,6 +9,7 @@ import com.iambilotta.spring.aiact.audit.AuditLogService;
 import com.iambilotta.spring.aiact.audit.HmacChain;
 import com.iambilotta.spring.aiact.model.AuditEvent;
 import com.iambilotta.spring.aiact.security.AiActEndpointGuard;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -46,7 +47,8 @@ public class AiActLogController {
     private final ObjectMapper mapper;
     private final AiActEndpointGuard guard;
 
-    public AiActLogController(AuditLogService auditLog, ObjectMapper mapper,
+    public AiActLogController(AuditLogService auditLog,
+                              @Qualifier("aiActObjectMapper") ObjectMapper mapper,
                               AiActEndpointGuard guard) {
         this.auditLog = auditLog;
         this.mapper = mapper;

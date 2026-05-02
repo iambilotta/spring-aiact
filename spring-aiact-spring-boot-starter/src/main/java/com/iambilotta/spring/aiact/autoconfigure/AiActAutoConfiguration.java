@@ -21,6 +21,7 @@ import com.iambilotta.spring.aiact.codegen.markdown.TechnicalFileMarkdownRendere
 import com.iambilotta.spring.aiact.codegen.pdf.DeclarationOfConformityPdfGenerator;
 import com.iambilotta.spring.aiact.oversight.OversightService;
 import com.iambilotta.spring.aiact.retention.RetentionPolicyService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -38,7 +39,18 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Import(AiActWebAutoConfiguration.class)
 public class AiActAutoConfiguration {
 
-    @Bean
+    /**
+     * Internal ObjectMapper used to serialise audit records and to read NDJSON slices.
+     *
+     * <p>Marked {@code defaultCandidate=false} so it is invisible to Spring's by-type
+     * autowiring and to the {@code @ConditionalOnMissingBean(ObjectMapper.class)} guard in
+     * {@code JacksonAutoConfiguration}. The application's own ObjectMapper, the one Spring
+     * MVC uses for HTTP message conversion, stays whatever Spring Boot configures, including
+     * its property-naming strategy.
+     *
+     * <p>This bean is reachable only via {@link Qualifier @Qualifier("aiActObjectMapper")}.
+     */
+    @Bean(defaultCandidate = false)
     @ConditionalOnMissingBean(name = "aiActObjectMapper")
     ObjectMapper aiActObjectMapper() {
         return new ObjectMapper()
@@ -85,7 +97,7 @@ public class AiActAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    PayloadHasher aiActPayloadHasher(ObjectMapper mapper) {
+    PayloadHasher aiActPayloadHasher(@Qualifier("aiActObjectMapper") ObjectMapper mapper) {
         return new PayloadHasher(mapper);
     }
 
@@ -99,7 +111,7 @@ public class AiActAutoConfiguration {
     @ConditionalOnMissingBean
     AuditLogService aiActAuditLogService(AiActConfigProperties props,
                                           HmacChain hmac,
-                                          ObjectMapper mapper) {
+                                          @Qualifier("aiActObjectMapper") ObjectMapper mapper) {
         return new NdjsonAuditLogService(
                 props.getLogDir(), hmac, mapper, props.getAudit().isSingleWriterLock());
     }
