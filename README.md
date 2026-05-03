@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/java-21%2B-orange.svg)](https://openjdk.org/projects/jdk/21/)
-[![Spring Boot](https://img.shields.io/badge/spring--boot-3.5%2B-green.svg)](https://spring.io/projects/spring-boot)
+[![Spring Boot](https://img.shields.io/badge/spring--boot-4.0%2B-green.svg)](https://spring.io/projects/spring-boot)
 [![CI](https://github.com/iambilotta/spring-aiact/actions/workflows/ci.yml/badge.svg)](https://github.com/iambilotta/spring-aiact/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/iambilotta/spring-aiact/actions/workflows/codeql.yml/badge.svg)](https://github.com/iambilotta/spring-aiact/actions/workflows/codeql.yml)
 [![JitPack](https://jitpack.io/v/iambilotta/spring-aiact.svg)](https://jitpack.io/#iambilotta/spring-aiact)
@@ -149,7 +149,7 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    call[HTTP request hits<br/>@AiActLog method]
+    req[HTTP request hits<br/>@AiActLog method]
     advisor[AiActLoggingAspect<br/>Spring AOP]
     hash[PayloadHasher<br/>SHA-256 input + output]
     chain[HmacChain<br/>prev_hmac + record_hmac]
@@ -159,9 +159,9 @@ flowchart LR
     rest2[GET /aiact/log/head]
     rest3[GET /aiact/log/export]
     rest4[POST /aiact/oversight/overrides]
-    guard[AiActEndpointGuard SPI<br/>Spring Security · OPA · API key]
+    guard[AiActEndpointGuard SPI<br/>Spring Security, OPA, API key]
 
-    call --> advisor --> hash --> chain --> sink --> file
+    req --> advisor --> hash --> chain --> sink --> file
     file --> rest1
     file --> rest2
     file --> rest3
@@ -306,7 +306,7 @@ aiact:
 
 The starter does not depend on Spring Security; OPA, API key checks, mTLS subject mappings plug into the same SPI. OPA + multi-tenant examples in [`docs/PRODUCTION.md`](docs/PRODUCTION.md).
 
-## Articles covered (v1.1)
+## Articles covered
 
 | Article | What spring-aiact does |
 |---|---|
@@ -391,9 +391,11 @@ Threat model + STRIDE table: [SECURITY.md](SECURITY.md#threat-model-1-page-summa
 
 ## Roadmap
 
-- **v1.1 (current, May 2026):** API freeze. Apache 2.0, JitPack distribution, single SPI for auth (`AiActEndpointGuard`), file-locked NDJSON audit log with HMAC chain, deny-by-default endpoints, fail-fast on the default HMAC secret in production, configuration metadata, actuator health indicator, internal `ObjectMapper` no longer a Spring bean.
+- **v2.0 (current, May 2026):** Spring Boot 4 active line. Apache 2.0, JitPack distribution, single SPI for auth (`AiActEndpointGuard`), file-locked NDJSON audit log with HMAC chain, deny-by-default endpoints, fail-fast on the default HMAC secret in production, configuration metadata, actuator health indicator, internal `ObjectMapper` no longer a Spring bean. OpenPDF 3.x.
+- **v1.1.0 (LTS, frozen):** Spring Boot 3.5+ line. Same feature set as v2.0 except for the Spring Boot 4 / OpenPDF 3 migration. No active maintenance; security backports only on explicit request.
 - **Future minor:** CI templates (GitHub Actions, GitLab, Jenkins) wrapping `verify`. JDBC-backed audit sink as an optional module. Multi-tenant isolation patterns documented. Spring Security autoconfiguration adapter as an opt-in extra module.
-- **v1.2.x candidate:** live encryption-at-rest ([ADR-0008](docs/adr/0008-encryption-at-rest-deferred.md), [docs/ENCRYPTION.md](docs/ENCRYPTION.md)).
+- **v2.1 candidate:** live encryption-at-rest ([ADR-0008](docs/adr/0008-encryption-at-rest-deferred.md), [docs/ENCRYPTION.md](docs/ENCRYPTION.md)).
+
 **On distribution:** Maven Central is **not** on the roadmap and is unlikely to be added unless a real adopter explicitly requires it. This repo is a reference / portfolio asset; the cost of maintaining a Maven Central release pipeline (GPG key custody, immutable releases, Sonatype workflow) is permanent and only worth paying when there is a concrete adopter demand. JitPack covers the consumer use case at zero ongoing maintenance cost. See [ADR-0005](docs/adr/0005-jitpack-distribution-v1.md).
 
 ## About
