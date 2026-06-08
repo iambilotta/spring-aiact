@@ -29,17 +29,24 @@ public class RetentionScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(RetentionScheduler.class);
 
-    private final RetentionPolicyService retention;
+    private final org.springframework.beans.factory.ObjectProvider<RetentionPolicyService> retention;
     private final AiActAutoConfiguration.AiActConfigProperties props;
 
-    public RetentionScheduler(RetentionPolicyService retention,
-                              AiActAutoConfiguration.AiActConfigProperties props) {
+    public RetentionScheduler(
+            org.springframework.beans.factory.ObjectProvider<RetentionPolicyService> retention,
+            AiActAutoConfiguration.AiActConfigProperties props) {
         this.retention = retention;
         this.props = props;
     }
 
     @Scheduled(cron = "${aiact.retention-sweeper.cron:0 0 3 * * *}")
     public void sweep() {
+        // The NDJSON file-pruning service is absent under aiact.audit.sink=jdbc (table retention
+        // is owned by the database operator); nothing to sweep then.
+        RetentionPolicyService policy = retention.getIfAvailable();
+        if (policy == null) {
+            return;
+        }
         Path dir = props.getLogDir();
         if (!Files.isDirectory(dir)) {
             return;
@@ -50,7 +57,7 @@ public class RetentionScheduler {
                     .map(p -> stripExtension(p.getFileName().toString()))
                     .toList();
             if (systemIds.isEmpty()) return;
-            RetentionPolicyService.PruneReport report = retention.prune(systemIds);
+            RetentionPolicyService.PruneReport report = policy.prune(systemIds);
             log.info("spring-aiact retention sweep done: pruned {} kept {} cutoff {}",
                     report.pruned(), report.kept(), report.cutoff());
         } catch (IOException e) {

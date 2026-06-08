@@ -114,6 +114,18 @@
       "defaultValue": true
     },
     {
+      "name": "aiact.audit.sink",
+      "type": "com.iambilotta.spring.aiact.config.AiActProperties$Audit$Sink",
+      "description": "Backend that persists the Article 12 audit log. ndjson (default) writes a per-system file under aiact.log-dir; jdbc persists the same HMAC-chained records to the aiact_audit_log table of the application DataSource, surviving scale-to-zero / ephemeral runtimes where the local filesystem does not.",
+      "defaultValue": "ndjson"
+    },
+    {
+      "name": "aiact.audit.jdbc.auto-ddl",
+      "type": "java.lang.Boolean",
+      "description": "JDBC sink only. When true (default), the starter runs the idempotent JdbcAuditLogService.initSchema() at startup to create the aiact_audit_log table if absent. Set false when a migration tool (Flyway / Liquibase) owns the DDL so the application is never schema-privileged.",
+      "defaultValue": true
+    },
+    {
       "name": "aiact.retention-sweeper.enabled",
       "type": "java.lang.Boolean",
       "description": "When true (default), a scheduled task prunes audit records older than aiact.retention. Disable when retention is handled externally or in tests.",
@@ -134,6 +146,13 @@
         {"value": "test"},
         {"value": "local"},
         {"value": "ci"}
+      ]
+    },
+    {
+      "name": "aiact.audit.sink",
+      "values": [
+        {"value": "ndjson", "description": "File-backed sink: one .ndjson file per system under aiact.log-dir."},
+        {"value": "jdbc", "description": "Table-backed sink: HMAC-chained records in aiact_audit_log on the application DataSource."}
       ]
     }
   ]

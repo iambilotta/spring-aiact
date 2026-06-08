@@ -43,6 +43,17 @@ public class AiActProperties {
     public void setAudit(Audit audit) { this.audit = audit; }
 
     public static class Audit {
+        /** Audit sink backends. NDJSON is the file-backed default; JDBC persists to a single table. */
+        public enum Sink { NDJSON, JDBC }
+
+        /**
+         * Which sink backs the Article 12 audit log. {@code ndjson} (default) writes a per-system
+         * file under {@code aiact.log-dir}; {@code jdbc} persists the same HMAC-chained records to
+         * the {@code aiact_audit_log} table of the application's {@link javax.sql.DataSource},
+         * which survives scale-to-zero / ephemeral runtimes where the local filesystem does not.
+         */
+        private Sink sink = Sink.NDJSON;
+
         /**
          * When {@code true} (default), the file-backed audit log acquires an OS-level
          * {@link java.nio.channels.FileLock} on every append and tails the file under the lock.
@@ -52,8 +63,30 @@ public class AiActProperties {
          */
         private boolean singleWriterLock = true;
 
+        private Jdbc jdbc = new Jdbc();
+
+        public Sink getSink() { return sink; }
+        public void setSink(Sink sink) { this.sink = sink; }
+
         public boolean isSingleWriterLock() { return singleWriterLock; }
         public void setSingleWriterLock(boolean v) { this.singleWriterLock = v; }
+
+        public Jdbc getJdbc() { return jdbc; }
+        public void setJdbc(Jdbc jdbc) { this.jdbc = jdbc; }
+
+        /** JDBC-sink-only settings (ignored when {@link #getSink()} is {@code NDJSON}). */
+        public static class Jdbc {
+            /**
+             * When {@code true} (default), the starter runs the idempotent
+             * {@code JdbcAuditLogService.initSchema()} at startup to create the
+             * {@code aiact_audit_log} table if absent. Set to {@code false} when a schema migration
+             * tool (Flyway / Liquibase) owns the DDL, so the application is never schema-privileged.
+             */
+            private boolean autoDdl = true;
+
+            public boolean isAutoDdl() { return autoDdl; }
+            public void setAutoDdl(boolean v) { this.autoDdl = v; }
+        }
     }
 
     public static class Endpoints {

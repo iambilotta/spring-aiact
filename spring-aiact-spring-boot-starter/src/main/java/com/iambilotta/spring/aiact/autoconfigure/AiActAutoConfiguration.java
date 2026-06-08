@@ -107,9 +107,40 @@ public class AiActAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    AuditLogService aiActAuditLogService(AiActConfigProperties props, HmacChain hmac) {
+    @ConditionalOnProperty(prefix = "aiact.audit", name = "sink", havingValue = "ndjson",
+            matchIfMissing = true)
+    AuditLogService aiActNdjsonAuditLogService(AiActConfigProperties props, HmacChain hmac) {
         return new NdjsonAuditLogService(
                 props.getLogDir(), hmac, buildAuditEventMapper(), props.getAudit().isSingleWriterLock());
+    }
+
+    /**
+     * JDBC audit sink, wired when {@code aiact.audit.sink=jdbc}. Builds a
+     * {@link com.iambilotta.spring.aiact.audit.JdbcAuditLogService} over the application's
+     * {@link javax.sql.DataSource} and, unless {@code aiact.audit.jdbc.auto-ddl=false} (for
+     * Flyway/Liquibase owners), runs the idempotent {@code initSchema()} so the sink is usable
+     * out of the box. The DataSource is a hard requirement here: a clear failure naming it is the
+     * right outcome when {@code sink=jdbc} is set without one on the classpath.
+     */
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "aiact.audit", name = "sink", havingValue = "jdbc")
+    AuditLogService aiActJdbcAuditLogService(
+            AiActConfigProperties props, HmacChain hmac,
+            org.springframework.beans.factory.ObjectProvider<javax.sql.DataSource> dataSource) {
+        javax.sql.DataSource ds = dataSource.getIfAvailable();
+        if (ds == null) {
+            throw new IllegalStateException(
+                    "spring-aiact: aiact.audit.sink=jdbc requires a javax.sql.DataSource bean, but "
+                    + "none was found. Add a JDBC driver + spring.datasource.* configuration, or set "
+                    + "aiact.audit.sink=ndjson (the default file-backed sink).");
+        }
+        com.iambilotta.spring.aiact.audit.JdbcAuditLogService sink =
+                new com.iambilotta.spring.aiact.audit.JdbcAuditLogService(ds, hmac, buildAuditEventMapper());
+        if (props.getAudit().getJdbc().isAutoDdl()) {
+            sink.initSchema();
+        }
+        return sink;
     }
 
     @Bean
@@ -134,8 +165,16 @@ public class AiActAutoConfiguration {
         return new OversightService(auditLog, metadataSanitizer);
     }
 
+    /**
+     * Retention sweeper service. Wired only under the NDJSON sink: pruning is file-based (rewrites
+     * each {@code .ndjson} per system), which has no meaning for the JDBC table. A JDBC deployment
+     * therefore gets no {@code RetentionPolicyService} (rather than the old fail-at-bean-creation
+     * "requires NdjsonAuditLogService"); table-level retention is owned by the database operator.
+     */
     @Bean
     @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = "aiact.audit", name = "sink", havingValue = "ndjson",
+            matchIfMissing = true)
     RetentionPolicyService aiActRetentionPolicyService(AuditLogService auditLog,
                                                        AiActConfigProperties props) {
         if (auditLog instanceof NdjsonAuditLogService nd) {

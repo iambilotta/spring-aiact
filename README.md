@@ -265,7 +265,23 @@ mvn spring-boot:run     # boots the app, AOP advisor wires the audit log
 
 The first invocation of any `@AiActLog` method appends a record. Verify the chain at `GET /aiact/log/verify?system={systemId}`.
 
-A working end-to-end example is in [`spring-aiact-sample`](spring-aiact-sample). A Docker Compose variant is in [`examples/docker-compose`](examples/docker-compose). Cross-library demo with `spring-gdpr`: [`spring-gdpr-aiact-demo`](https://github.com/iambilotta/spring-gdpr-aiact-demo).
+A working end-to-end example is in [`spring-aiact-sample`](spring-aiact-sample) (clone-run-curl walkthrough in its [README](spring-aiact-sample/README.md)). A Docker Compose variant is in [`examples/docker-compose`](examples/docker-compose). Cross-library demo with `spring-gdpr`: [`spring-gdpr-aiact-demo`](https://github.com/iambilotta/spring-gdpr-aiact-demo).
+
+## Audit sink: NDJSON or JDBC
+
+The Article 12 chain is file-backed by default (`aiact.log-dir`), which is ideal on a host with a durable volume. On scale-to-zero / ephemeral runtimes (Cloud Run, Lambda, a pod without a persistent volume) the local filesystem does not survive a restart, so persist the chain to your database instead. **One flag** switches the sink, batteries included:
+
+```yaml
+aiact:
+  audit:
+    sink: jdbc          # default: ndjson
+    jdbc:
+      auto-ddl: true    # default: create aiact_audit_log if absent; set false if Flyway/Liquibase owns the DDL
+```
+
+That is all: the starter builds a `JdbcAuditLogService` over your existing `DataSource`, runs the idempotent `initSchema()` (unless `auto-ddl: false`), and the same HMAC-chained records, the same verify/head/export endpoints, and the same tamper-evidence apply, now in the `aiact_audit_log` table. The per-record chaining is serialised per `system_id` by an in-process lock plus a `SELECT ... FOR UPDATE` on the head, so multi-writer correctness across JVMs rides on the database row lock.
+
+When a schema-migration tool owns the table, set `auto-ddl: false` and run the equivalent DDL there; the [`JdbcAuditLogService.initSchema()`](spring-aiact-core/src/main/java/com/iambilotta/spring/aiact/audit/JdbcAuditLogService.java) source is the canonical shape. Retention under the JDBC sink is the database operator's job (table partitioning / a scheduled `DELETE`); the NDJSON file-pruning sweeper does not apply.
 
 ## Production auth wiring
 

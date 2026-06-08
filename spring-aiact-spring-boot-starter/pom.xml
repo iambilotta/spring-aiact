@@ -56,6 +56,13 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- In-memory DataSource for the JDBC audit-sink auto-configuration test
+             (AuditSinkSelectionTest), mirroring the core JdbcAuditLogServiceTest. -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Spring Boot 4 split spring-boot-jackson out of starter; bring it back for
              ObjectMapperIsolationTest which asserts the application's primary mapper
              is intact. -->
