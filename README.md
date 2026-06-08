@@ -15,7 +15,8 @@ For:     Lead engineer (Java/Kotlin) shipping an EU high-risk AI system
 Does:    Generates Annex IV technical file + Article 47 DoC at build,
          writes an Article 12 tamper-evident audit chain at runtime,
          enforces the four required companion annotations at compile time
-Effort:  ~15 min first run on a fresh service, ~1h production-ready
+Effort:  ~15 min first run (proven by the sample app's clone-run-curl walkthrough,
+         spring-aiact-sample/README.md), ~1h production-ready
          (HMAC secret in vault, AiActEndpointGuard wired, single-writer-lock)
 Cost:    Apache 2.0, no SaaS, no data egress
 Status:  v2.x active line (Spring Boot 4+), v1.x LTS line (Spring Boot 3.5+) frozen at v1.1.0. JitPack distribution.
