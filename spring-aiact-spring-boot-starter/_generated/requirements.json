@@ -1,0 +1,193 @@
+{
+  "tracegate": {
+    "schema": 1,
+    "kind": "requirements-catalog"
+  },
+  "label": "spring-aiact-spring-boot-starter",
+  "coverage": {
+    "total": 10,
+    "with_complete_spec": 0,
+    "by_category": {
+      "FR": 10
+    }
+  },
+  "requirements": [
+    {
+      "id": "FR-(root).HmacFailFast#failsToStartWhenSecretIsDefaultAndNoDevProfile",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "HmacFailFast",
+      "method": "failsToStartWhenSecretIsDefaultAndNoDevProfile",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/HmacFailFastTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).HmacFailFast#startsWhenDevProfileActive",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "HmacFailFast",
+      "method": "startsWhenDevProfileActive",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/HmacFailFastTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).HmacFailFast#startsWhenGuardExplicitlyDisabled",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "HmacFailFast",
+      "method": "startsWhenGuardExplicitlyDisabled",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/HmacFailFastTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).HmacFailFast#startsWhenSecretOverridden",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "HmacFailFast",
+      "method": "startsWhenSecretOverridden",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/HmacFailFastTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).ObjectMapperIsolation#aiActDoesNotPublishAnInternalObjectMapperBean",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "ObjectMapperIsolation",
+      "method": "aiActDoesNotPublishAnInternalObjectMapperBean",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/ObjectMapperIsolationTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).PayloadHasherDeterminism#hashesDifferOnDifferentPayloads",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "PayloadHasherDeterminism",
+      "method": "hashesDifferOnDifferentPayloads",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/PayloadHasherDeterminismTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).PayloadHasherDeterminism#noneStrategyReturnsAStableMarker",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "PayloadHasherDeterminism",
+      "method": "noneStrategyReturnsAStableMarker",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/PayloadHasherDeterminismTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).PayloadHasherDeterminism#sameJsonPayloadAlwaysHashesToTheSameValue",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "PayloadHasherDeterminism",
+      "method": "sameJsonPayloadAlwaysHashesToTheSameValue",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/PayloadHasherDeterminismTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-web.AiActTransparencyFilter#leavesNonAiSurfacesUntouched",
+      "category": "FR",
+      "module": "web",
+      "unit": "AiActTransparencyFilter",
+      "method": "leavesNonAiSurfacesUntouched",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/web/AiActTransparencyFilterTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-web.AiActTransparencyFilter#stampsTheDisclosureHeaderOnAResponseFromAnAiSurface",
+      "category": "FR",
+      "module": "web",
+      "unit": "AiActTransparencyFilter",
+      "method": "stampsTheDisclosureHeaderOnAResponseFromAnAiSurface",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/web/AiActTransparencyFilterTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    }
+  ],
+  "sections": [
+    "config",
+    "http-endpoints",
+    "modules",
+    "ports",
+    "templates"
+  ]
+}

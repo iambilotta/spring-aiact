@@ -1,0 +1,924 @@
+{
+  "tracegate": {
+    "schema": 1,
+    "kind": "requirements-catalog"
+  },
+  "label": "spring-aiact-core",
+  "coverage": {
+    "total": 53,
+    "with_complete_spec": 0,
+    "by_category": {
+      "FR": 53
+    }
+  },
+  "requirements": [
+    {
+      "id": "FR-accuracy.AccuracyEnforcer#enforceThrowsBelowThresholdSoABuildOrEvalHookCanGateOnIt",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AccuracyEnforcer",
+      "method": "enforceThrowsBelowThresholdSoABuildOrEvalHookCanGateOnIt",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AccuracyEnforcer#failsAndSignalsWhenAGreaterEqualThresholdIsMissed",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AccuracyEnforcer",
+      "method": "failsAndSignalsWhenAGreaterEqualThresholdIsMissed",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AccuracyEnforcer#honoursAnUpperBoundThresholdForErrorRates",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AccuracyEnforcer",
+      "method": "honoursAnUpperBoundThresholdForErrorRates",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AccuracyEnforcer#passesWhenAGreaterEqualThresholdIsMet",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AccuracyEnforcer",
+      "method": "passesWhenAGreaterEqualThresholdIsMet",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AccuracyEnforcer#readsTheThresholdStraightFromTheAnnotation",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AccuracyEnforcer",
+      "method": "readsTheThresholdStraightFromTheAnnotation",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AccuracyEnforcer#rejectsAnUnparseableThreshold",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AccuracyEnforcer",
+      "method": "rejectsAnUnparseableThreshold",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AccuracyEnforcer#treatsABareNumberAsAGreaterEqualThreshold",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AccuracyEnforcer",
+      "method": "treatsABareNumberAsAGreaterEqualThreshold",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.AiActLoggingAspect#disablingCaptureSkipsHashes",
+      "category": "FR",
+      "module": "audit",
+      "unit": "AiActLoggingAspect",
+      "method": "disablingCaptureSkipsHashes",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/AiActLoggingAspectTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.AiActLoggingAspect#invocationProducesOneAuditRecord",
+      "category": "FR",
+      "module": "audit",
+      "unit": "AiActLoggingAspect",
+      "method": "invocationProducesOneAuditRecord",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/AiActLoggingAspectTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.AiActLoggingAspect#thrownExceptionProducesAnomalyRecordWithSanitizedMetadata",
+      "category": "FR",
+      "module": "audit",
+      "unit": "AiActLoggingAspect",
+      "method": "thrownExceptionProducesAnomalyRecordWithSanitizedMetadata",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/AiActLoggingAspectTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.HmacChain#chainPropagatesPrevHmac",
+      "category": "FR",
+      "module": "audit",
+      "unit": "HmacChain",
+      "method": "chainPropagatesPrevHmac",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/HmacChainTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.HmacChain#differentKeysProduceDifferentOutput",
+      "category": "FR",
+      "module": "audit",
+      "unit": "HmacChain",
+      "method": "differentKeysProduceDifferentOutput",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/HmacChainTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.HmacChain#emptyKeyRejected",
+      "category": "FR",
+      "module": "audit",
+      "unit": "HmacChain",
+      "method": "emptyKeyRejected",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/HmacChainTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.HmacChain#firstRecordSeedsFromAllZeroes",
+      "category": "FR",
+      "module": "audit",
+      "unit": "HmacChain",
+      "method": "firstRecordSeedsFromAllZeroes",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/HmacChainTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.HmacChain#identicalInputsAndKeyProduceIdenticalOutput",
+      "category": "FR",
+      "module": "audit",
+      "unit": "HmacChain",
+      "method": "identicalInputsAndKeyProduceIdenticalOutput",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/HmacChainTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.HmacChain#verifyDetectsTampering",
+      "category": "FR",
+      "module": "audit",
+      "unit": "HmacChain",
+      "method": "verifyDetectsTampering",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/HmacChainTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.JdbcAuditLogService#appendsAndChainsThreeEventsAcrossADbRoundTrip",
+      "category": "FR",
+      "module": "audit",
+      "unit": "JdbcAuditLogService",
+      "method": "appendsAndChainsThreeEventsAcrossADbRoundTrip",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/JdbcAuditLogServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.JdbcAuditLogService#headReturnsTheLatestRecordHmac",
+      "category": "FR",
+      "module": "audit",
+      "unit": "JdbcAuditLogService",
+      "method": "headReturnsTheLatestRecordHmac",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/JdbcAuditLogServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.JdbcAuditLogService#recoversChainHeadAfterServiceRecreation",
+      "category": "FR",
+      "module": "audit",
+      "unit": "JdbcAuditLogService",
+      "method": "recoversChainHeadAfterServiceRecreation",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/JdbcAuditLogServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.JdbcAuditLogService#verifyDetectsTamperingInTheDatabase",
+      "category": "FR",
+      "module": "audit",
+      "unit": "JdbcAuditLogService",
+      "method": "verifyDetectsTamperingInTheDatabase",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/JdbcAuditLogServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.MetadataSanitizer#describeExceptionEmitsClassNameAndFingerprintNotMessage",
+      "category": "FR",
+      "module": "audit",
+      "unit": "MetadataSanitizer",
+      "method": "describeExceptionEmitsClassNameAndFingerprintNotMessage",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/MetadataSanitizerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.MetadataSanitizer#describeExceptionWithoutMessageEmitsNoMessageMarker",
+      "category": "FR",
+      "module": "audit",
+      "unit": "MetadataSanitizer",
+      "method": "describeExceptionWithoutMessageEmitsNoMessageMarker",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/MetadataSanitizerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.MetadataSanitizer#dropsKeysOutsideTheWhitelist",
+      "category": "FR",
+      "module": "audit",
+      "unit": "MetadataSanitizer",
+      "method": "dropsKeysOutsideTheWhitelist",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/MetadataSanitizerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.MetadataSanitizer#emptyOrNullInputReturnsEmptyMap",
+      "category": "FR",
+      "module": "audit",
+      "unit": "MetadataSanitizer",
+      "method": "emptyOrNullInputReturnsEmptyMap",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/MetadataSanitizerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.MetadataSanitizer#truncatesValuesAtTheConfiguredMaxLength",
+      "category": "FR",
+      "module": "audit",
+      "unit": "MetadataSanitizer",
+      "method": "truncatesValuesAtTheConfiguredMaxLength",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/MetadataSanitizerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.NdjsonAuditLogService#appendsAndChainsThreeEvents",
+      "category": "FR",
+      "module": "audit",
+      "unit": "NdjsonAuditLogService",
+      "method": "appendsAndChainsThreeEvents",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/NdjsonAuditLogServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.NdjsonAuditLogService#recoversChainHeadAfterServiceRecreation",
+      "category": "FR",
+      "module": "audit",
+      "unit": "NdjsonAuditLogService",
+      "method": "recoversChainHeadAfterServiceRecreation",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/NdjsonAuditLogServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.NdjsonAuditLogService#verifyDetectsTamperingOnDisk",
+      "category": "FR",
+      "module": "audit",
+      "unit": "NdjsonAuditLogService",
+      "method": "verifyDetectsTamperingOnDisk",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/NdjsonAuditLogServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.NdjsonAuditLogService#verifyReturnsCleanReportOnGoodLog",
+      "category": "FR",
+      "module": "audit",
+      "unit": "NdjsonAuditLogService",
+      "method": "verifyReturnsCleanReportOnGoodLog",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/NdjsonAuditLogServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.NdjsonMultiWriter#chainCorruptsWithoutFileLockAcrossTwoConcurrentWriters",
+      "category": "FR",
+      "module": "audit",
+      "unit": "NdjsonMultiWriter",
+      "method": "chainCorruptsWithoutFileLockAcrossTwoConcurrentWriters",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/NdjsonMultiWriterTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-audit.NdjsonMultiWriter#chainStaysValidWithFileLockEnabledAcrossTwoConcurrentWriters",
+      "category": "FR",
+      "module": "audit",
+      "unit": "NdjsonMultiWriter",
+      "method": "chainStaysValidWithFileLockEnabledAcrossTwoConcurrentWriters",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/audit/NdjsonMultiWriterTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-oversight.OversightService#recordsAcceptAsOverrideKind",
+      "category": "FR",
+      "module": "oversight",
+      "unit": "OversightService",
+      "method": "recordsAcceptAsOverrideKind",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/oversight/OversightServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-oversight.OversightService#recordsFlagAnomalyAsAnomalyKind",
+      "category": "FR",
+      "module": "oversight",
+      "unit": "OversightService",
+      "method": "recordsFlagAnomalyAsAnomalyKind",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/oversight/OversightServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-oversight.OversightService#recordsStopAsStopKindWithoutLinkedEventId",
+      "category": "FR",
+      "module": "oversight",
+      "unit": "OversightService",
+      "method": "recordsStopAsStopKindWithoutLinkedEventId",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/oversight/OversightServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-oversight.OversightService#rejectsMissingActor",
+      "category": "FR",
+      "module": "oversight",
+      "unit": "OversightService",
+      "method": "rejectsMissingActor",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/oversight/OversightServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-oversight.OversightService#rejectsMissingLinkedEventIdForNonStopDecision",
+      "category": "FR",
+      "module": "oversight",
+      "unit": "OversightService",
+      "method": "rejectsMissingLinkedEventIdForNonStopDecision",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/oversight/OversightServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-oversight.OversightService#rejectsMissingSystemId",
+      "category": "FR",
+      "module": "oversight",
+      "unit": "OversightService",
+      "method": "rejectsMissingSystemId",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/oversight/OversightServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-oversight.OversightService#rejectsUnknownDecision",
+      "category": "FR",
+      "module": "oversight",
+      "unit": "OversightService",
+      "method": "rejectsUnknownDecision",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/oversight/OversightServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-oversight.OversightService#truncatesLongReasonAtSanitizerLimit",
+      "category": "FR",
+      "module": "oversight",
+      "unit": "OversightService",
+      "method": "truncatesLongReasonAtSanitizerLimit",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/oversight/OversightServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-retention.RetentionPolicyService#chainStaysVerifiableForKeptSliceAfterPrune",
+      "category": "FR",
+      "module": "retention",
+      "unit": "RetentionPolicyService",
+      "method": "chainStaysVerifiableForKeptSliceAfterPrune",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/retention/RetentionPolicyServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-retention.RetentionPolicyService#emptyFileNoOps",
+      "category": "FR",
+      "module": "retention",
+      "unit": "RetentionPolicyService",
+      "method": "emptyFileNoOps",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/retention/RetentionPolicyServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-retention.RetentionPolicyService#leavesFileIntactWhenNothingIsOld",
+      "category": "FR",
+      "module": "retention",
+      "unit": "RetentionPolicyService",
+      "method": "leavesFileIntactWhenNothingIsOld",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/retention/RetentionPolicyServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-retention.RetentionPolicyService#prunesRecordsOlderThanCutoff",
+      "category": "FR",
+      "module": "retention",
+      "unit": "RetentionPolicyService",
+      "method": "prunesRecordsOlderThanCutoff",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/retention/RetentionPolicyServiceTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-risk.RiskClassification#classifiesAnExplicitlyDeclaredBand",
+      "category": "FR",
+      "module": "risk",
+      "unit": "RiskClassification",
+      "method": "classifiesAnExplicitlyDeclaredBand",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/risk/RiskClassificationTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-risk.RiskClassification#defaultsToMinimalWhenNothingIsDeclared",
+      "category": "FR",
+      "module": "risk",
+      "unit": "RiskClassification",
+      "method": "defaultsToMinimalWhenNothingIsDeclared",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/risk/RiskClassificationTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-risk.RiskClassification#inferssHighRiskFromTheHighRiskSystemAnnotation",
+      "category": "FR",
+      "module": "risk",
+      "unit": "RiskClassification",
+      "method": "inferssHighRiskFromTheHighRiskSystemAnnotation",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/risk/RiskClassificationTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-risk.RiskClassification#prohibitedIsTheOnlyBandRefusedByConstruction",
+      "category": "FR",
+      "module": "risk",
+      "unit": "RiskClassification",
+      "method": "prohibitedIsTheOnlyBandRefusedByConstruction",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/risk/RiskClassificationTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-security.AiActMockEndpointGuard#allowAllByDefaultLetsThroughUnknownSystems",
+      "category": "FR",
+      "module": "security",
+      "unit": "AiActMockEndpointGuard",
+      "method": "allowAllByDefaultLetsThroughUnknownSystems",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/security/AiActMockEndpointGuardTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-security.AiActMockEndpointGuard#allowsExplicitlyConfiguredCombination",
+      "category": "FR",
+      "module": "security",
+      "unit": "AiActMockEndpointGuard",
+      "method": "allowsExplicitlyConfiguredCombination",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/security/AiActMockEndpointGuardTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-security.AiActMockEndpointGuard#denyTrumpsAllow",
+      "category": "FR",
+      "module": "security",
+      "unit": "AiActMockEndpointGuard",
+      "method": "denyTrumpsAllow",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/security/AiActMockEndpointGuardTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-transparency.TransparencyDisclosure#resolvesAnInteractionDisclosureFromTheAnnotation",
+      "category": "FR",
+      "module": "transparency",
+      "unit": "TransparencyDisclosure",
+      "method": "resolvesAnInteractionDisclosureFromTheAnnotation",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/transparency/TransparencyDisclosureTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-transparency.TransparencyDisclosure#returnsNullWhenTheTypeDoesNotDeclareTransparency",
+      "category": "FR",
+      "module": "transparency",
+      "unit": "TransparencyDisclosure",
+      "method": "returnsNullWhenTheTypeDoesNotDeclareTransparency",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/transparency/TransparencyDisclosureTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-transparency.TransparencyDisclosure#usesTheDeclaredDisclosureMessageWhenProvided",
+      "category": "FR",
+      "module": "transparency",
+      "unit": "TransparencyDisclosure",
+      "method": "usesTheDeclaredDisclosureMessageWhenProvided",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/transparency/TransparencyDisclosureTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    }
+  ],
+  "sections": [
+    "config",
+    "http-endpoints",
+    "modules",
+    "ports",
+    "templates"
+  ]
+}

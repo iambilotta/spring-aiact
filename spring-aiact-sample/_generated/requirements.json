@@ -1,0 +1,108 @@
+{
+  "tracegate": {
+    "schema": 1,
+    "kind": "requirements-catalog"
+  },
+  "label": "spring-aiact-sample",
+  "coverage": {
+    "total": 5,
+    "with_complete_spec": 0,
+    "by_category": {
+      "FR": 5
+    }
+  },
+  "requirements": [
+    {
+      "id": "FR-(root).EndpointDenyByDefault#exportEndpointReturns403WhenNoGuardConfigured",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "EndpointDenyByDefault",
+      "method": "exportEndpointReturns403WhenNoGuardConfigured",
+      "file": "spring-aiact-sample/src/test/java/com/iambilotta/spring/aiact/sample/EndpointDenyByDefaultTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).EndpointDenyByDefault#headEndpointReturns403WhenNoGuardConfigured",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "EndpointDenyByDefault",
+      "method": "headEndpointReturns403WhenNoGuardConfigured",
+      "file": "spring-aiact-sample/src/test/java/com/iambilotta/spring/aiact/sample/EndpointDenyByDefaultTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).EndpointDenyByDefault#verifyEndpointReturns403WhenNoGuardConfigured",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "EndpointDenyByDefault",
+      "method": "verifyEndpointReturns403WhenNoGuardConfigured",
+      "file": "spring-aiact-sample/src/test/java/com/iambilotta/spring/aiact/sample/EndpointDenyByDefaultTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).HiringScreenerIntegration#exportEndpointReturnsNdjsonAndVerifyEndpointIsOk",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "HiringScreenerIntegration",
+      "method": "exportEndpointReturnsNdjsonAndVerifyEndpointIsOk",
+      "file": "spring-aiact-sample/src/test/java/com/iambilotta/spring/aiact/sample/HiringScreenerIntegrationTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).HiringScreenerIntegration#scoringProducesArticle12RecordWithValidHmacChain",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "HiringScreenerIntegration",
+      "method": "scoringProducesArticle12RecordWithValidHmacChain",
+      "file": "spring-aiact-sample/src/test/java/com/iambilotta/spring/aiact/sample/HiringScreenerIntegrationTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    }
+  ],
+  "sections": [
+    "config",
+    "http-endpoints",
+    "modules",
+    "ports",
+    "templates"
+  ]
+}

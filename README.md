@@ -367,6 +367,31 @@ The full decision rationale lives under [`docs/adr/`](docs/adr/). Highlights:
 - [ADR-0007](docs/adr/0007-typed-chain-head-record.md): typed `ChainHead` record on `/aiact/log/head`.
 - [ADR-0008](docs/adr/0008-encryption-at-rest-deferred.md) [proposed]: live encryption-at-rest deferred to v1.2.x; filesystem encryption is the v1.x answer ([design study](docs/ENCRYPTION.md)).
 
+## Living requirements (tracegate)
+
+This repo dogfoods [**tracegate**](https://github.com/iambilotta/tracegate): every test is
+treated as a requirement, and the catalog is generated from the test suite, never written by
+hand. Each module carries its own `_generated/` catalog (`requirements.md`,
+`requirements-by-us.md`, `requirements.json`, plus as-built sections like `http-endpoints.md`
+and `modules.md` where a framework is detected). The catalog covers
+**83 requirements** across the five test-bearing modules.
+
+The catalog is **generated, never hand-edited**. To change a requirement, change the test
+(rename it, or add a `@spec.given` / `@spec.when` / `@spec.then` javadoc) and regenerate:
+
+```bash
+make tracegate-install   # one-off: install tracegate, pinned to the CI commit
+make requirements        # regenerate every module's _generated/ catalog
+make requirements-check  # drift-gate: exit 2 if the catalog drifted from the code
+```
+
+CI runs `make requirements-check`'s gate (the `tracegate` job in
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml)), so the committed catalog can never
+silently fall out of sync with the code. tracegate is pinned to a commit in both the Makefile
+(`TRACEGATE_REF`) and the workflow. Which modules are catalogued is pinned in
+[`tracegate.toml`](tracegate.toml); add an `[[apps]]` block there when a new test-bearing
+module appears.
+
 ## Operational notes the README will not let you skip
 
 **Multi-pod deployment.** Audit log is one append-only NDJSON file per system id. With more than one pod writing to the same file, keep `aiact.audit.single-writer-lock=true` (default). Each append acquires an OS file lock, tails the file under the lock and recomputes the chain head from disk. On NFSv3 without lockd, `flock` is not reliable; prefer NFSv4 or a single-writer deployment.

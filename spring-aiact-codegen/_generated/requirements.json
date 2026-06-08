@@ -1,0 +1,153 @@
+{
+  "tracegate": {
+    "schema": 1,
+    "kind": "requirements-catalog"
+  },
+  "label": "spring-aiact-codegen",
+  "coverage": {
+    "total": 8,
+    "with_complete_spec": 0,
+    "by_category": {
+      "FR": 8
+    }
+  },
+  "requirements": [
+    {
+      "id": "FR-(root).AuditExportPackager#manifestHmacVerifiesAgainstTheManifestText",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "AuditExportPackager",
+      "method": "manifestHmacVerifiesAgainstTheManifestText",
+      "file": "spring-aiact-codegen/src/test/java/com/iambilotta/spring/aiact/codegen/AuditExportPackagerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).AuditExportPackager#packageContainsAllEntriesPlusSignedManifest",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "AuditExportPackager",
+      "method": "packageContainsAllEntriesPlusSignedManifest",
+      "file": "spring-aiact-codegen/src/test/java/com/iambilotta/spring/aiact/codegen/AuditExportPackagerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-datasheet.DatasetDatasheetRenderer#rendersBiasesWhenDeclared",
+      "category": "FR",
+      "module": "datasheet",
+      "unit": "DatasetDatasheetRenderer",
+      "method": "rendersBiasesWhenDeclared",
+      "file": "spring-aiact-codegen/src/test/java/com/iambilotta/spring/aiact/codegen/datasheet/DatasetDatasheetRendererTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-datasheet.DatasetDatasheetRenderer#rendersGapWhenBiasesAreEmpty",
+      "category": "FR",
+      "module": "datasheet",
+      "unit": "DatasetDatasheetRenderer",
+      "method": "rendersGapWhenBiasesAreEmpty",
+      "file": "spring-aiact-codegen/src/test/java/com/iambilotta/spring/aiact/codegen/datasheet/DatasetDatasheetRendererTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-fria.FriaScaffoldDesign#generatesAFriaScaffoldFromTheAnnotationModel",
+      "category": "FR",
+      "module": "fria",
+      "unit": "FriaScaffoldDesign",
+      "method": "generatesAFriaScaffoldFromTheAnnotationModel",
+      "file": "spring-aiact-codegen/src/test/java/com/iambilotta/spring/aiact/codegen/fria/FriaScaffoldDesignTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-markdown.TechnicalFileMarkdownRenderer#rendersAllNineSectionsWithGapPlaceholdersWhenEmpty",
+      "category": "FR",
+      "module": "markdown",
+      "unit": "TechnicalFileMarkdownRenderer",
+      "method": "rendersAllNineSectionsWithGapPlaceholdersWhenEmpty",
+      "file": "spring-aiact-codegen/src/test/java/com/iambilotta/spring/aiact/codegen/markdown/TechnicalFileMarkdownRendererTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-markdown.TechnicalFileMarkdownRenderer#rendersTablesWhenSectionsArePopulated",
+      "category": "FR",
+      "module": "markdown",
+      "unit": "TechnicalFileMarkdownRenderer",
+      "method": "rendersTablesWhenSectionsArePopulated",
+      "file": "spring-aiact-codegen/src/test/java/com/iambilotta/spring/aiact/codegen/markdown/TechnicalFileMarkdownRendererTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-pdf.DeclarationOfConformityPdfGenerator#rendersValidPdfHeader",
+      "category": "FR",
+      "module": "pdf",
+      "unit": "DeclarationOfConformityPdfGenerator",
+      "method": "rendersValidPdfHeader",
+      "file": "spring-aiact-codegen/src/test/java/com/iambilotta/spring/aiact/codegen/pdf/DeclarationOfConformityPdfGeneratorTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    }
+  ],
+  "sections": []
+}

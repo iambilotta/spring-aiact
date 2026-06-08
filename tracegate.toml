@@ -1,0 +1,42 @@
+# tracegate config — pins the as-built / requirements catalog for this repo.
+#
+# Why explicit apps instead of auto-detect: the catalog is committed and CI
+# drift-gates it (`tracegate . --check`). Auto-detection derives a Maven module's
+# label from its directory name, and the repo-root "app" (the aggregator pom, which
+# has no tests) would take its label from the *checkout directory* name — which is
+# not stable across machines/CI and would make the gate report false drift. Listing
+# the test-bearing modules explicitly makes the catalog deterministic everywhere.
+#
+# Regenerate:  make requirements      (writes each module's _generated/)
+# Drift-gate:  make requirements-check (what CI runs)
+#
+# This file only OVERRIDES detection; tracegate never requires it. When a new
+# test-bearing module is added, add an [[apps]] block for it here.
+
+[[apps]]
+path = "spring-aiact-core"
+label = "spring-aiact-core"
+languages = ["java"]
+frameworks = ["spring"]
+
+[[apps]]
+path = "spring-aiact-codegen"
+label = "spring-aiact-codegen"
+languages = ["java"]
+
+[[apps]]
+path = "spring-aiact-maven-plugin"
+label = "spring-aiact-maven-plugin"
+languages = ["java"]
+
+[[apps]]
+path = "spring-aiact-sample"
+label = "spring-aiact-sample"
+languages = ["java"]
+frameworks = ["spring"]
+
+[[apps]]
+path = "spring-aiact-spring-boot-starter"
+label = "spring-aiact-spring-boot-starter"
+languages = ["java"]
+frameworks = ["spring"]

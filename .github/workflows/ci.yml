@@ -74,3 +74,24 @@ jobs:
       - name: OWASP Dependency-Check
         run: mvn -B -ntp -V -Pdependency-check verify -DskipTests
         continue-on-error: true
+
+  # Living requirements (tracegate dogfood): the committed `*/_generated/`
+  # catalog is derived from the test suite; this gate fails if it drifts from
+  # the code. Additive and independent of the Java build. To fix a drift,
+  # regenerate locally (`make requirements`) and commit — never hand-edit a
+  # `_generated/*` file. tracegate is pinned to a commit so the gate is stable.
+  tracegate:
+    name: tracegate drift-gate
+    runs-on: ubuntu-latest
+    env:
+      # Keep in lockstep with the Makefile's TRACEGATE_REF.
+      TRACEGATE_REF: 3bb94964f1e0502d2e68681611bf5ac335180f4b
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install tracegate (pinned)
+        run: pip install "git+https://github.com/iambilotta/tracegate@${TRACEGATE_REF}"
+      - name: Drift-gate the requirements catalog
+        run: tracegate . --check
