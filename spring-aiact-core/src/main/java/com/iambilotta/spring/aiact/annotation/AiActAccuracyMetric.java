@@ -13,9 +13,13 @@ import java.lang.annotation.Target;
 
 /**
  * Declares an Article 15 accuracy or robustness metric that the system commits to.
- * The metric is forwarded to the technical file accuracy section. The starter does not
- * compute these metrics for you: it only records what you have measured and the harness
- * (test suite or evaluation pipeline) that produced the value.
+ * The metric is forwarded to the technical file accuracy section. The library does not
+ * compute the metric for you: your harness (test suite or evaluation pipeline) measures it.
+ * <p>
+ * Given a measured value, the threshold declared here is enforceable via
+ * {@code com.iambilotta.spring.aiact.accuracy.AccuracyEnforcer}: it compares the value to the
+ * {@link #threshold()} and signals (or throws) when the metric falls below it, so a build
+ * assertion or eval hook can gate on Article 15 accuracy instead of only recording it.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
