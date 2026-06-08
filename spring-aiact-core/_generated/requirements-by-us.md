@@ -4,9 +4,9 @@ Auto-generated companion to `requirements.md`. Tests link to a User Story via th
 
 ## Coverage
 
-- Total tests scanned: **53**
+- Total tests scanned: **57**
 - Tests linked to a User Story: **0**
-- Tests without `@spec.us` (implementation detail): **53**
+- Tests without `@spec.us` (implementation detail): **57**
 - User Stories declared in PRODUCT.md: **0**
 - User Stories with at least one linked test: **0**
 - User Stories declared but **not yet implemented**: **0**
@@ -24,6 +24,10 @@ These tests are valid requirements but exist below the user-story horizon (unit-
 - `FR-accuracy.AccuracyEnforcer#readsTheThresholdStraightFromTheAnnotation`
 - `FR-accuracy.AccuracyEnforcer#rejectsAnUnparseableThreshold`
 - `FR-accuracy.AccuracyEnforcer#treatsABareNumberAsAGreaterEqualThreshold`
+- `FR-accuracy.AiActAccuracyExtension#passesWhenEveryDeclaredMetricMeetsItsThreshold`
+- `FR-accuracy.AiActAccuracyExtension#refusesToSilentlyPassWhenADeclaredMetricHasNoMeasuredValue`
+- `FR-accuracy.AiActAccuracyExtension#rejectsASubjectThatDeclaresNoAccuracyMetric`
+- `FR-accuracy.AiActAccuracyExtension#throwsNamingTheMetricWhenADeclaredMetricIsBelowThreshold`
 
 ### Module `audit`
 

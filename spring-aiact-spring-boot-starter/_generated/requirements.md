@@ -6,13 +6,33 @@ Auto-generated from test sources by tracegate. Do NOT edit by hand: edit the tes
 
 ## Coverage
 
-- Total tests scanned: **10**
+- Total tests scanned: **14**
 - With complete spec javadoc: **0** (0%)
-- FR: 10
+- FR: 14
 
 ## Module `(root)`
 
 ### Functional Requirements
+
+#### `FR-(root).AuditSinkSelection#defaultsToTheNdjsonSink`
+
+- _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
+- **File**: `spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/AuditSinkSelectionTest.java`
+
+#### `FR-(root).AuditSinkSelection#doesNotTripTheNdjsonRetentionRequirementUnderJdbc`
+
+- _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
+- **File**: `spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/AuditSinkSelectionTest.java`
+
+#### `FR-(root).AuditSinkSelection#keepsTheNdjsonRetentionServiceUnderTheDefaultSink`
+
+- _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
+- **File**: `spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/AuditSinkSelectionTest.java`
+
+#### `FR-(root).AuditSinkSelection#wiresTheJdbcSinkWhenSinkIsJdbc`
+
+- _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
+- **File**: `spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/AuditSinkSelectionTest.java`
 
 #### `FR-(root).HmacFailFast#failsToStartWhenSecretIsDefaultAndNoDevProfile`
 

@@ -5,13 +5,81 @@
   },
   "label": "spring-aiact-spring-boot-starter",
   "coverage": {
-    "total": 10,
+    "total": 14,
     "with_complete_spec": 0,
     "by_category": {
-      "FR": 10
+      "FR": 14
     }
   },
   "requirements": [
+    {
+      "id": "FR-(root).AuditSinkSelection#defaultsToTheNdjsonSink",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "AuditSinkSelection",
+      "method": "defaultsToTheNdjsonSink",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/AuditSinkSelectionTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).AuditSinkSelection#doesNotTripTheNdjsonRetentionRequirementUnderJdbc",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "AuditSinkSelection",
+      "method": "doesNotTripTheNdjsonRetentionRequirementUnderJdbc",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/AuditSinkSelectionTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).AuditSinkSelection#keepsTheNdjsonRetentionServiceUnderTheDefaultSink",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "AuditSinkSelection",
+      "method": "keepsTheNdjsonRetentionServiceUnderTheDefaultSink",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/AuditSinkSelectionTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-(root).AuditSinkSelection#wiresTheJdbcSinkWhenSinkIsJdbc",
+      "category": "FR",
+      "module": "(root)",
+      "unit": "AuditSinkSelection",
+      "method": "wiresTheJdbcSinkWhenSinkIsJdbc",
+      "file": "spring-aiact-spring-boot-starter/src/test/java/com/iambilotta/spring/aiact/autoconfigure/AuditSinkSelectionTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
     {
       "id": "FR-(root).HmacFailFast#failsToStartWhenSecretIsDefaultAndNoDevProfile",
       "category": "FR",

@@ -5,10 +5,10 @@
   },
   "label": "spring-aiact-core",
   "coverage": {
-    "total": 53,
+    "total": 57,
     "with_complete_spec": 0,
     "by_category": {
-      "FR": 53
+      "FR": 57
     }
   },
   "requirements": [
@@ -121,6 +121,74 @@
       "unit": "AccuracyEnforcer",
       "method": "treatsABareNumberAsAGreaterEqualThreshold",
       "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AiActAccuracyExtension#passesWhenEveryDeclaredMetricMeetsItsThreshold",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AiActAccuracyExtension",
+      "method": "passesWhenEveryDeclaredMetricMeetsItsThreshold",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AiActAccuracyExtensionTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AiActAccuracyExtension#refusesToSilentlyPassWhenADeclaredMetricHasNoMeasuredValue",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AiActAccuracyExtension",
+      "method": "refusesToSilentlyPassWhenADeclaredMetricHasNoMeasuredValue",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AiActAccuracyExtensionTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AiActAccuracyExtension#rejectsASubjectThatDeclaresNoAccuracyMetric",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AiActAccuracyExtension",
+      "method": "rejectsASubjectThatDeclaresNoAccuracyMetric",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AiActAccuracyExtensionTest.java",
+      "spec": {
+        "given": "",
+        "when": "",
+        "then": "",
+        "adr": "",
+        "us": "",
+        "ac": "",
+        "complete": false
+      }
+    },
+    {
+      "id": "FR-accuracy.AiActAccuracyExtension#throwsNamingTheMetricWhenADeclaredMetricIsBelowThreshold",
+      "category": "FR",
+      "module": "accuracy",
+      "unit": "AiActAccuracyExtension",
+      "method": "throwsNamingTheMetricWhenADeclaredMetricIsBelowThreshold",
+      "file": "spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AiActAccuracyExtensionTest.java",
       "spec": {
         "given": "",
         "when": "",

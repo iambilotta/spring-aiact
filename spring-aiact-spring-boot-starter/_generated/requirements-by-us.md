@@ -4,9 +4,9 @@ Auto-generated companion to `requirements.md`. Tests link to a User Story via th
 
 ## Coverage
 
-- Total tests scanned: **10**
+- Total tests scanned: **14**
 - Tests linked to a User Story: **0**
-- Tests without `@spec.us` (implementation detail): **10**
+- Tests without `@spec.us` (implementation detail): **14**
 - User Stories declared in PRODUCT.md: **0**
 - User Stories with at least one linked test: **0**
 - User Stories declared but **not yet implemented**: **0**
@@ -17,6 +17,10 @@ These tests are valid requirements but exist below the user-story horizon (unit-
 
 ### Module `(root)`
 
+- `FR-(root).AuditSinkSelection#defaultsToTheNdjsonSink`
+- `FR-(root).AuditSinkSelection#doesNotTripTheNdjsonRetentionRequirementUnderJdbc`
+- `FR-(root).AuditSinkSelection#keepsTheNdjsonRetentionServiceUnderTheDefaultSink`
+- `FR-(root).AuditSinkSelection#wiresTheJdbcSinkWhenSinkIsJdbc`
 - `FR-(root).HmacFailFast#failsToStartWhenSecretIsDefaultAndNoDevProfile`
 - `FR-(root).HmacFailFast#startsWhenDevProfileActive`
 - `FR-(root).HmacFailFast#startsWhenGuardExplicitlyDisabled`

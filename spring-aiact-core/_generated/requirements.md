@@ -6,9 +6,9 @@ Auto-generated from test sources by tracegate. Do NOT edit by hand: edit the tes
 
 ## Coverage
 
-- Total tests scanned: **53**
+- Total tests scanned: **57**
 - With complete spec javadoc: **0** (0%)
-- FR: 53
+- FR: 57
 
 ## Module `accuracy`
 
@@ -48,6 +48,26 @@ Auto-generated from test sources by tracegate. Do NOT edit by hand: edit the tes
 
 - _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
 - **File**: `spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AccuracyEnforcerTest.java`
+
+#### `FR-accuracy.AiActAccuracyExtension#passesWhenEveryDeclaredMetricMeetsItsThreshold`
+
+- _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
+- **File**: `spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AiActAccuracyExtensionTest.java`
+
+#### `FR-accuracy.AiActAccuracyExtension#refusesToSilentlyPassWhenADeclaredMetricHasNoMeasuredValue`
+
+- _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
+- **File**: `spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AiActAccuracyExtensionTest.java`
+
+#### `FR-accuracy.AiActAccuracyExtension#rejectsASubjectThatDeclaresNoAccuracyMetric`
+
+- _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
+- **File**: `spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AiActAccuracyExtensionTest.java`
+
+#### `FR-accuracy.AiActAccuracyExtension#throwsNamingTheMetricWhenADeclaredMetricIsBelowThreshold`
+
+- _(spec missing — add `@spec.given` / `@spec.when` / `@spec.then` javadoc)_
+- **File**: `spring-aiact-core/src/test/java/com/iambilotta/spring/aiact/accuracy/AiActAccuracyExtensionTest.java`
 
 
 ## Module `audit`

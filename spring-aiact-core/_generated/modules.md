@@ -10,7 +10,7 @@ Auto-generated. Modulith convention: each top-level package under `it.housetrees
 
 | Module | Files | Sub-packages | Exposed API (@NamedInterface) | Depends on |
 |---|---|---|---|---|
-| `accuracy` | 2 | 1 | _(none)_ | `annotation` |
+| `accuracy` | 3 | 1 | _(none)_ | `annotation` |
 | `annotation` | 14 | 1 | _(none)_ | _(none)_ |
 | `audit` | 9 | 1 | _(none)_ | `annotation`, `model` |
 | `config` | 1 | 1 | _(none)_ | _(none)_ |
@@ -51,7 +51,7 @@ component "transparency"
 
 ### `accuracy`
 
-- **Files**: 2
+- **Files**: 3
 - **Sub-packages** (1):
   - `accuracy`
 - **Exposed API**: _(only the top-level package; no inner exports)_
