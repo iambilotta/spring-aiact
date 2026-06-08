@@ -322,6 +322,25 @@ aiact:
 
 The starter does not depend on Spring Security; OPA, API key checks, mTLS subject mappings plug into the same SPI. OPA + multi-tenant examples in [`docs/PRODUCTION.md`](docs/PRODUCTION.md).
 
+## Article 15 accuracy gate
+
+`@AiActAccuracyMetric` declares the accuracy / robustness thresholds your system commits to. The library cannot measure your model for you, but it can **gate the build** on the values your evaluation harness produces, so the declared threshold can never drift from the enforced one. Instead of calling the static `AccuracyEnforcer` and remembering to fail the test, register the batteries-included JUnit 5 extension and feed it the measured values:
+
+```java
+@RegisterExtension
+static AiActAccuracyExtension accuracy = AiActAccuracyExtension.forSubject(HiringScreener.class);
+
+@Test
+void meetsArticle15Thresholds() {
+    var report = myEvalHarness.run();                       // your numbers, your data
+    accuracy.measured(RiskMetric.PRECISION, report.precision())
+            .measured(RiskMetric.FALSE_POSITIVE_RATE, report.falsePositiveRate());
+    // the extension enforces every declared metric after the test body
+}
+```
+
+Every `@AiActAccuracyMetric` on the subject is enforced together. A metric below its threshold throws `AccuracyThresholdViolation` (naming the metric); a metric that was declared but never measured fails loudly too, so a forgotten value cannot silently pass the gate. `forSubject` is also usable imperatively (`accuracy.enforce()`) outside JUnit. This puts Article 15 on the same enforcement tier as the build plugin (Articles 10/11/13/14) and the runtime advisor (Article 12), instead of being a call-it-yourself utility.
+
 ## Articles covered
 
 | Article | What spring-aiact does |
@@ -331,7 +350,7 @@ The starter does not depend on Spring Security; OPA, API key checks, mTLS subjec
 | Article 12 | NDJSON append-only audit log with HMAC chain. Tamper detection via `/aiact/log/verify` |
 | Article 13 | `@AiActIntendedPurpose` populates the Instructions for Use section |
 | Article 14 | `@AiActOversight` declarations and `POST /aiact/oversight/{eventId}/override` records overrides as second events linked to the original |
-| Article 15 | `@AiActAccuracyMetric` declarations forwarded to the technical file |
+| Article 15 | `@AiActAccuracyMetric` declarations forwarded to the technical file, and enforced as a build gate via `AiActAccuracyExtension` (see [Article 15 accuracy gate](#article-15-accuracy-gate)) |
 | Article 47 | Declaration of Conformity PDF with signature placeholder |
 | Annex VII | `AuditExportPackager` produces a signed ZIP for notified body submission |
 

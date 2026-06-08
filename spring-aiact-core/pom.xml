@@ -35,6 +35,15 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <!-- JUnit 5 is needed at compile time ONLY by the optional test-support helper
+             AiActAccuracyExtension (the first-class Art.15 accuracy hook). Optional so it is not
+             forced onto an adopter's runtime classpath; adopters that use the extension already
+             have JUnit on their test classpath. -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <optional>true</optional>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
