@@ -53,6 +53,17 @@ public class VerifyMojo extends AbstractMojo {
         List<Path> deps = MavenClasspath.compileClasspath(project);
         try (ClasspathScanner scanner = new ClasspathScanner(classesDir, deps).asCloseable()) {
             List<Class<?>> classes = scanner.loadAllClasses();
+            // Article 5 prohibited practices are refused by construction, regardless of
+            // warningOnly: a prohibited AI system must never pass the build.
+            List<String> prohibited = new RiskClassificationValidator().validate(classes);
+            for (String v : prohibited) {
+                getLog().error("spring-aiact: " + v);
+            }
+            if (!prohibited.isEmpty()) {
+                throw new MojoFailureException(
+                        "spring-aiact verify failed: " + prohibited.size()
+                                + " prohibited Article 5 practice(s). See errors above.");
+            }
             List<String> violations = new HighRiskAnnotationValidator(datasetOptional).validate(classes);
             report(violations);
         } catch (IOException e) {
