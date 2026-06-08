@@ -41,5 +41,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- In-memory relational store to exercise the JDBC audit sink (REQ-AIACT-003).
+             Test-scoped only: the sink itself depends solely on java.sql + javax.sql. -->
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 </project>
