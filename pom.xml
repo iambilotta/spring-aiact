@@ -55,7 +55,7 @@
         <spring-boot.version>4.0.5</spring-boot.version>
         <jackson.version>2.18.2</jackson.version>
         <slf4j.version>2.0.16</slf4j.version>
-        <openpdf.version>3.0.4</openpdf.version>
+        <openpdf.version>3.0.5</openpdf.version>
         <junit.version>5.11.4</junit.version>
         <assertj.version>3.27.0</assertj.version>
         <mockito.version>5.14.2</mockito.version>
