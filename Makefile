@@ -4,6 +4,7 @@
 # tracegate dogfood loop so contributors can regenerate / drift-check the
 # committed `*/_generated/` catalog the same way CI does.
 #
+#   make setup               install tracegate (pinned) + the pre-commit git hooks
 #   make requirements        regenerate every module's _generated/ catalog
 #   make requirements-check  drift-gate: exit 2 if the catalog drifted from the code
 #   make tracegate-install   install tracegate, pinned to the CI commit
@@ -18,11 +19,17 @@ TRACEGATE_REF ?= 3bb94964f1e0502d2e68681611bf5ac335180f4b
 TRACEGATE_PKG := git+https://github.com/iambilotta/tracegate@$(TRACEGATE_REF)
 PIP ?= python3 -m pip
 
-.PHONY: help requirements requirements-check tracegate-install
+.PHONY: help setup requirements requirements-check tracegate-install
 
 help:  ## show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
 		awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-22s\033[0m %s\n", $$1, $$2}'
+
+# One-shot per clone: pin tracegate (the generator) + install the pre-commit framework hooks.
+# The hooks include the post-merge/post-rewrite regen stages that keep the whole-tree
+# _generated/ catalog from drifting on merge/rebase/cherry-pick (ADR sw-scm-007).
+setup: tracegate-install  ## install tracegate (pinned) + the pre-commit git hooks (run once per clone)
+	scripts/install-git-hooks.sh
 
 tracegate-install:  ## install tracegate, pinned to the CI commit
 	$(PIP) install --quiet "$(TRACEGATE_PKG)"
