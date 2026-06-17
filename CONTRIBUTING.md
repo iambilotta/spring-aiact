@@ -29,6 +29,26 @@ mvn clean test
 The full reactor builds in well under a minute on a modern laptop. Any failing test must be
 fixed before opening a pull request.
 
+### Git hooks (one-off)
+
+```bash
+make setup   # installs the pinned tracegate + the pre-commit framework hooks
+```
+
+This installs the [pre-commit](https://pre-commit.com) hooks (config in
+`.pre-commit-config.yaml`, every tool version pinned). They keep the committed
+`*/_generated/` catalog from drifting:
+
+- **pre-commit** regenerates the catalog and auto-stages it on every commit.
+- **post-merge / post-rewrite** regenerate it again after `merge` / `pull` / `rebase` /
+  `cherry-pick` — those operations replay existing commits and bypass the pre-commit hook,
+  so without these stages an integrated HEAD can drift from what any single branch committed
+  (the CI `tracegate` gate would then catch it late). The same pinned generator runs in all
+  three places, so local and CI agree byte-for-byte.
+
+You can skip the hooks for a single commit with `pre-commit`'s native mechanism
+(e.g. `SKIP=regen-generated-docs git commit ...`); CI still drift-gates the catalog.
+
 ### Living requirements (tracegate)
 
 The per-module `_generated/` catalog is produced by
