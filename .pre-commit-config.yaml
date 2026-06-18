@@ -6,11 +6,12 @@
 # Update pins:              pre-commit autoupdate   (then review + commit)
 #
 # Responsibility map:
-#   1. requirements catalog regen + auto-stage  -> local hook, delegates to the pinned
-#                                                  tracegate CLI (github.com/iambilotta/tracegate,
-#                                                  pinned by Makefile TRACEGATE_REF; installed
-#                                                  by `make setup`). Fires on commit AND after
-#                                                  every tree-mutating integration op.
+#   1. requirements catalog regen + auto-stage  -> local hook, runs the tracegate CLI through
+#                                                  the PINNED uvx env (github.com/iambilotta/
+#                                                  tracegate @ Makefile TRACEGATE_REF; see
+#                                                  scripts/hooks/tracegate-pinned.sh), never a
+#                                                  bare PATH `tracegate`. Fires on commit AND
+#                                                  after every tree-mutating integration op.
 #   2. conventional commit message              -> official conventional-pre-commit hook (pinned)
 #   3. secrets scan                             -> official gitleaks hook (pinned)
 #   4. shell script lint                        -> official shellcheck hook (pinned)
@@ -39,10 +40,13 @@ repos:
       - id: regen-generated-docs
         name: regenerate every module's _generated/*.md + auto-stage
         # Idempotent: clean tree -> byte-identical output -> no-op. The generator is the
-        # pinned tracegate CLI (Makefile TRACEGATE_REF, installed via `make setup`); running
-        # it on every commit is what makes the catalog unable to drift.
+        # tracegate CLI run through the PINNED uvx env (Makefile TRACEGATE_REF, see
+        # scripts/hooks/tracegate-pinned.sh); running it on every commit is what makes the
+        # catalog unable to drift. Scoped to pre-commit: integration ops are covered by the
+        # post-merge/post-rewrite hook below.
         entry: scripts/hooks/regen-docs-and-stage.sh
         language: script
+        stages: [pre-commit]
         always_run: true
         pass_filenames: false
 
