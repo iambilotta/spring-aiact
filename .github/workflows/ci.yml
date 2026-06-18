@@ -84,14 +84,12 @@ jobs:
     name: tracegate drift-gate
     runs-on: ubuntu-latest
     env:
-      # Keep in lockstep with the Makefile's TRACEGATE_REF.
+      # Single source of the pin: the Makefile's TRACEGATE_REF. CI runs the SAME pinned uvx
+      # invocation as the local hooks (uvx --from git+...@TRACEGATE_REF tracegate), so a stale
+      # PATH install can never make local and CI disagree.
       TRACEGATE_REF: 3bb94964f1e0502d2e68681611bf5ac335180f4b
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v6
-        with:
-          python-version: '3.12'
-      - name: Install tracegate (pinned)
-        run: pip install "git+https://github.com/iambilotta/tracegate@${TRACEGATE_REF}"
-      - name: Drift-gate the requirements catalog
-        run: tracegate . --check
+      - uses: astral-sh/setup-uv@v5
+      - name: Drift-gate the requirements catalog (pinned tracegate via uvx)
+        run: uvx --from "git+https://github.com/iambilotta/tracegate@${TRACEGATE_REF}" tracegate . --check
