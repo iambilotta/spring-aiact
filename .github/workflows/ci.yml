@@ -18,7 +18,7 @@ jobs:
         java: [ '21', '25' ]
     name: build (java ${{ matrix.java }})
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up JDK ${{ matrix.java }}
         uses: actions/setup-java@v5
@@ -64,7 +64,7 @@ jobs:
     needs: build
     if: github.event_name == 'pull_request'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Set up JDK 21
         uses: actions/setup-java@v5
         with:
@@ -89,7 +89,7 @@ jobs:
       # PATH install can never make local and CI disagree.
       TRACEGATE_REF: 3bb94964f1e0502d2e68681611bf5ac335180f4b
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v5
       - name: Drift-gate the requirements catalog (pinned tracegate via uvx)
         run: uvx --from "git+https://github.com/iambilotta/tracegate@${TRACEGATE_REF}" tracegate . --check
